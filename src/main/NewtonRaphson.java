@@ -3,8 +3,6 @@ package main;
 public class NewtonRaphson {
 
     public NewtonRaphson() {
-//        this.f = f;
-//        this.fPrime = fPrime;
     }
 
     public static double approximate(Function<Double, Double> f, Function<Double, Double> fPrime, double initial, int iterations) {
