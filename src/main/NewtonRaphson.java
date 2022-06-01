@@ -66,7 +66,7 @@ public class NewtonRaphson {
         System.out.println(NewtonRaphson.approximate(f2, fPrime, 1, 12));
         System.out.println(NewtonRaphson.solve(f, fPrime, 1, 12, 16));
         System.out.println(NewtonRaphson.smartSolve(f, fPrime, 1, 12, 16, (x) -> {
-            return (Math.abs(x) < .0001);
+            return (Math.abs(x) < .00000000001);
         }));
     }
 }
