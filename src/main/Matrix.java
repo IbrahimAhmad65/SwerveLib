@@ -205,6 +205,15 @@ public class Matrix {
         System.out.println(matrix.inverse());
     }
 
+    public Matrix transform(Function<Double,Double> function){
+        for(int i = 0; i < data.length; i++){
+            for (int j = 0; j < data[0].length; j++){
+                data[i][j] = function.compute(data[i][j]);
+            }
+        }
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Matrix =\n" + stringArray(data);
