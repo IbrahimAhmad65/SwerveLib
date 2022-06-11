@@ -1,5 +1,5 @@
 package main;
-
+import java.util.Arrays;
 public class Vector {
     enum DimensionError {
         THROW, ZERO,
@@ -7,6 +7,7 @@ public class Vector {
 
     private  DimensionError dimensionError;
     private double[] data;
+
 
     public Vector(int dimensions, DimensionError dimensionError) {
         data = new double[dimensions];
@@ -16,6 +17,27 @@ public class Vector {
     public Vector(DimensionError dimensionError, double... data) {
         this.data = data;
         this.dimensionError = dimensionError;
+    }
+
+    public void fill(double data){
+        Arrays.fill(this.data,data);
+    }
+
+    public void operate(double value, Function2Args<Double,Double> function){
+        data[0] = function.compute(data[0],value);
+        Arrays.parallelPrefix(this.data,(a,b)->{return function.compute(b,value);});
+    }
+
+    public Vector selflessOperate(double value, Function2Args<Double,Double> function){
+        double[] selfless = data.clone();
+        selfless[0] = function.compute(selfless[0],value);
+        Arrays.parallelPrefix(selfless,(a,b)->{return function.compute(b,value);});
+        return new Vector(dimensionError,selfless);
+    }
+
+
+    public int getDimensions(){
+        return data.length;
     }
 
     public static double dot(Vector v1, Vector v2, DimensionError dimensionError) {
@@ -91,6 +113,14 @@ public class Vector {
 
     }
 
+    public Double[] getDataDouble(){
+        Double[] out = new Double[data.length];
+        for(int i = 0; i < data.length; i++){
+            out[i] = Double.valueOf(data[i]);
+        }
+        return out;
+    }
+
     // Preserves shadowing
     public void addToSelf(Vector input) {
         dimensionCheck("self addition", dimensionError, this, input);
@@ -135,5 +165,19 @@ public class Vector {
 
     public Vector clone() {
         return new Vector(dimensionError, this.data.clone());
+    }
+
+    public static void main(String[] args) {
+        double[] lol  = {1,2,3,5.0,6};
+        Arrays.parallelPrefix(lol,(a,b)->{return b*2;});
+//        for (double i: lol){
+//            System.out.println(i);
+//        }
+
+        Vector v = new Vector(DimensionError.ZERO,2,8,6,12);
+        v.operate(6,(x,y)->{return (x*y);});
+        for (double i : v.data){
+            System.out.println(i);
+        }
     }
 }
