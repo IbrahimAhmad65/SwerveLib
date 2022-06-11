@@ -5,7 +5,7 @@ public class Vector {
         THROW, ZERO,
     }
 
-    private DimensionError dimensionError;
+    private  DimensionError dimensionError;
     private double[] data;
 
     public Vector(int dimensions, DimensionError dimensionError) {

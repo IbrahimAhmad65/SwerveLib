@@ -9,7 +9,7 @@ public class Zeros {
         return current;
     }
 
-    public static double newtonSmartApproximate(Function<Double, Double> f, Function<Double, Double> fPrime, double initial, int iterations, Function<Boolean, Double> threshold) {
+    public static double  newtonSmartApproximate(Function<Double, Double> f, Function<Double, Double> fPrime, double initial, int iterations, Function<Boolean, Double> threshold) {
         double current = initial;
         double oldCurrent = 0;
         for (int i = 0; i < iterations; i++) {

@@ -3,7 +3,7 @@ package main;
 public class Matrix {
     double[][] data;
 
-    public Matrix(double[][] data) {
+    public Matrix( double[][] data) {
         this.data = data;
     }
 

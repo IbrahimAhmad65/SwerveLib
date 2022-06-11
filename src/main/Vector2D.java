@@ -1,7 +1,7 @@
 package main;
 
 // Class for handleing all forms of vector2D math
-public class Vector2D {
+public class  Vector2D {
 
     // Data in this class is stored in cartesian coordinates
     double x;
