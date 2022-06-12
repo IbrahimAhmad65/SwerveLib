@@ -19,6 +19,11 @@ public class Vector {
         this.dimensionError = dimensionError;
     }
 
+    public Vector(Vector v, DimensionError dimensionError){
+        this.data = v.getData();
+        this.dimensionError = dimensionError;
+    }
+
     public void fill(double data){
         Arrays.fill(this.data,data);
     }

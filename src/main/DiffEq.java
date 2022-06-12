@@ -21,6 +21,66 @@ public class DiffEq {
         return y;
     }
 
+    // broken no use
+    public static Vector rk4System(double X, double initialX, double iterations, Vector initialConditions, FunctionNArgs... functions) {
+        if (true) {
+            throw new RuntimeException("This method bad lol");
+        }
+        Matrix k1, k2, k3, k4;
+        k1 = new Matrix(1, initialConditions.getDimensions());
+        k2 = new Matrix(1, initialConditions.getDimensions());
+        k3 = new Matrix(1, initialConditions.getDimensions());
+        k4 = new Matrix(1, initialConditions.getDimensions());
+        Vector vars = new Vector(initialConditions.getDimensions() + 1, Vector.DimensionError.ZERO);
+        System.arraycopy(initialConditions.getData(), 0, vars.getData(), 1, initialConditions.getData().length);
+
+        vars.getData()[0] = initialX;
+        System.out.println(vars.getData().length + " " + functions.length);
+        double h = (X - initialX) / (iterations);
+        for (int i = 0; i < iterations; i++) {
+//            k2.fill(0);
+//            k3.fill(0);
+//            k4.fill(0);
+            for (int j = 0; j < functions.length; j++) {
+                k1.getData()[0][j] = (double) functions[j].compute(vars.getDataDouble());
+            }
+
+            for (int j = 0; j < functions.length; j++) {
+                k2.getData()[0][j] = (double) functions[j].compute(Matrix.doubleToDouble(k1.clone().scale(h / 2).add(new Matrix(new double[][]{vars.getData()})).getData()[0]));
+            }
+
+            for (int j = 0; j < functions.length; j++) {
+                k3.getData()[0][j] = (double) functions[j].compute(Matrix.doubleToDouble(k2.clone().scale(h / 2).add(new Matrix(new double[][]{vars.getData()})).getData()[0]));
+            }
+            for (int j = 0; j < functions.length; j++) {
+                k4.getData()[0][j] = (double) functions[j].compute(Matrix.doubleToDouble(k3.clone().scale(h).add(new Matrix(new double[][]{vars.getData()})).getData()[0]));
+            }
+//
+//            k2 = f1Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2);
+//            l2 = f2Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2);
+//            m2 = f3Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2);
+//
+//            k3 = f1Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2);
+//            l3 = f2Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2);
+//            m3 = f3Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2);
+//
+//
+//            k4 = f1Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3);
+//            l4 = f2Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3);
+//            m4 = f3Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3);
+//
+//
+//            y += 1.0 / 6 * h * (k1 + 2 * k2 + 2 * k3 + k4);
+//            z += 1.0 / 6 * h * (l1 + 2 * l2 + 2 * l3 + l4);
+//            o += 1.0 / 6 * h * (m1 + 2 * m2 + 2 * m3 + m4);
+            for (int j = 1; j < functions.length + 1; j++) {
+                vars.getData()[j] += 1 / 6.0 * h * (k1.getData()[0][j - 1] + 2 * k2.getData()[0][j - 1] + 2 * k3.getData()[0][j - 1] + k4.getData()[0][j - 1]);
+            }
+            vars.getData()[0] += h;
+        }
+        return vars;
+    }
+
     // Really bad, rk4 is just better. cant think of when euler is better
     public static double forwardEuler(Function2Args<Double, Double> fPrime, int iterations, double givenX, double givenY, double X) {
         double y = givenY, x = givenX, h = (X - givenX) / (iterations);
@@ -31,8 +91,7 @@ public class DiffEq {
         return y;
     }
 
-    public static double[] rk4System2(Function3Args<Double, Double> f1Prime, Function3Args<Double, Double> f2Prime,
-                                      int iterations, double givenX, double givenY, double X, double givenZ) {
+    public static double[] rk4System2(Function3Args<Double, Double> f1Prime, Function3Args<Double, Double> f2Prime, int iterations, double givenX, double givenY, double X, double givenZ) {
         double k1, k2, k3, k4, y = givenY, x = givenX, h;
         double l1, l2, l3, l4, z = givenZ;
         h = (X - givenX) / (iterations);
@@ -100,8 +159,7 @@ public class DiffEq {
 //        return vars;
 //    }
 
-    public static double[] rk4System3(Function4Args<Double, Double> f1Prime, Function4Args<Double, Double> f2Prime, Function4Args<Double, Double> f3Prime,
-                                      int iterations, double givenX, double givenY, double X, double givenZ, double givenO) {
+    public static double[] rk4System3(Function4Args<Double, Double> f1Prime, Function4Args<Double, Double> f2Prime, Function4Args<Double, Double> f3Prime, int iterations, double givenX, double givenY, double X, double givenZ, double givenO) {
         double k1, k2, k3, k4, y = givenY, x = givenX, h;
         double l1, l2, l3, l4, z = givenZ;
         double m1, m2, m3, m4, o = givenO;
@@ -135,9 +193,7 @@ public class DiffEq {
         return new double[]{y, z, o};
     }
 
-    public static double[] rk4System4(Function5Args<Double, Double> f1Prime, Function5Args<Double, Double> f2Prime, Function5Args<Double, Double> f3Prime,
-                                      Function5Args<Double, Double> f4Prime, int iterations, double givenX, double givenY,
-                                      double X, double givenZ, double givenO,double givenP) {
+    public static double[] rk4System4(Function5Args<Double, Double> f1Prime, Function5Args<Double, Double> f2Prime, Function5Args<Double, Double> f3Prime, Function5Args<Double, Double> f4Prime, int iterations, double givenX, double givenY, double X, double givenZ, double givenO, double givenP) {
         double k1, k2, k3, k4, y = givenY, x = givenX, h;
         double l1, l2, l3, l4, z = givenZ;
         double m1, m2, m3, m4, o = givenO;
@@ -145,29 +201,27 @@ public class DiffEq {
         h = (X - givenX) / (iterations);
         System.out.println(h);
         for (int i = 0; i < iterations; i++) {
-            k1 = f1Prime.compute(x, y, z, o,p);
-            l1 = f2Prime.compute(x, y, z, o,p);
-            m1 = f3Prime.compute(x, y, z, o,p);
-            n1 = f4Prime.compute(x, y, z, o,p);
+            k1 = f1Prime.compute(x, y, z, o, p);
+            l1 = f2Prime.compute(x, y, z, o, p);
+            m1 = f3Prime.compute(x, y, z, o, p);
+            n1 = f4Prime.compute(x, y, z, o, p);
 
-            k2 = f1Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2,p + h * n1 / 2);
-            l2 = f2Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2,p + h * n1 / 2);
-            m2 = f3Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2,p + h * n1 / 2);
-            n2 = f3Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2,p + h * n1 / 2);
-
-
-            k3 = f1Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2,p + h * n2 / 2);
-            l3 = f2Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2,p + h * n2 / 2);
-            m3 = f3Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2,p + h * n2 / 2);
-            n3 = f3Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2,p + h * n2 / 2);
+            k2 = f1Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2, p + h * n1 / 2);
+            l2 = f2Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2, p + h * n1 / 2);
+            m2 = f3Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2, p + h * n1 / 2);
+            n2 = f4Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2, p + h * n1 / 2);
 
 
+            k3 = f1Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2, p + h * n2 / 2);
+            l3 = f2Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2, p + h * n2 / 2);
+            m3 = f3Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2, p + h * n2 / 2);
+            n3 = f4Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2, p + h * n2 / 2);
 
-            k4 = f1Prime.compute(x + h , y + h * k3, z + h * l3, o + h * m3 ,p + h * n3);
-            l4 = f2Prime.compute(x + h , y + h * k3, z + h * l3, o + h * m3 ,p + h * n3);
-            m4 = f3Prime.compute(x + h , y + h * k3, z + h * l3, o + h * m3 ,p + h * n3);
-            n4 = f3Prime.compute(x + h , y + h * k3, z + h * l3, o + h * m3 ,p + h * n3);
 
+            k4 = f1Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3, p + h * n3);
+            l4 = f2Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3, p + h * n3);
+            m4 = f3Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3, p + h * n3);
+            n4 = f4Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3, p + h * n3);
 
 
             y += 1.0 / 6 * h * (k1 + 2 * k2 + 2 * k3 + k4);
@@ -177,19 +231,23 @@ public class DiffEq {
 
             x += h;
         }
-        return new double[]{y, z, o,p};
+        return new double[]{y, z, o, p};
     }
 
+
+
     public static void main(String[] args) {
-        double[] b = DiffEq.rk4System3((x, y, z, o) -> {
-            return -1 / 2.0 * y;
-        }, (x, y, z, o) -> {
-            return 1 / 2.0 * y - 1 / 4.0 * z;
-        }, (x, y, z, o) -> {
-            return 1 / 4.0 * z - 1 / 6.0 * o;
-        }, 99999, 0, 5, 5, 6, 8);
-
-
-        System.out.println(b[0] + " " + b[1] + " " + b[2]);
+        double mu = .1;
+        double g = 9.81;
+        double[] b = DiffEq.rk4System4((t,x, y, vx, vy) -> {
+            return vx;
+        }, (t,x, y, vx, vy) -> {
+            return vy;
+        }, (t,x, y, vx, vy) -> {
+            return -mu * vx * Math.sqrt(vx *vx +vy *vy);
+        }, (t,x, y, vx, vy) -> {
+            return -g-mu * vy * Math.sqrt(vx *vx +vy *vy);
+        }, 99999, 0, 0, 5,  0, 30, 6);
+        System.out.println(b[0] + " " + b[1] + " " + b[2]  + " " + b[3]);
     }
 }

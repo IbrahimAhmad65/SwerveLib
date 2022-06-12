@@ -1,7 +1,10 @@
 package main;
 
+import java.security.PublicKey;
+import java.util.Arrays;
+
 public class Matrix {
-    double[][] data;
+    private double[][] data;
 
     public Matrix( double[][] data) {
         this.data = data;
@@ -23,7 +26,36 @@ public class Matrix {
         return new Matrix(transposedMatrix);
     }
 
-    public Matrix multiply(Matrix in) {
+    public void setData(double[][] data){
+        this.data = data;
+    }
+
+    public void setData(Double[][] data){
+        this.data = new double[data.length][data[0].length];
+        for(int i =0; i < data.length; i++){
+            for(int j =0; j < data[0].length; j++){
+                this.data[i][j] = data[i][j];
+            }
+        }
+    }
+
+    public double[][] getData() {
+        return data;
+    }
+
+    public void fill (double value){
+        for (int i = 0; i < data.length; i++) {
+            Arrays.fill(data[i],value);
+        }
+    }
+
+    public void fill (double[] value) {
+        for (int i = 0; i < data.length; i++) {
+            System.arraycopy(value,0,data[i],0,data.length);
+        }
+    }
+
+        public Matrix multiply(Matrix in) {
         int i, j, k;
         int row1 = data.length;
         int row2 = in.data.length;
@@ -42,12 +74,13 @@ public class Matrix {
         return new Matrix(out);
     }
 
-    public void add(Matrix in) {
+    public Matrix add(Matrix in) {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
                 data[i][j] += in.data[i][j];
             }
         }
+        return this;
     }
 
     public void subtract(Matrix in) {
@@ -58,14 +91,29 @@ public class Matrix {
         }
     }
 
-    public void scale(double scalar) {
+    public Matrix scale(double scalar) {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
                 data[i][j] *= scalar;
             }
         }
+        return this;
     }
 
+    public static double[] DoubleTodouble(Double[] d){
+        double[] out = new double[d.length];
+        for (int i = 0; i < d.length; i++) {
+            out[i] = d[i];
+        }
+        return out;
+    }
+    public static Double[] doubleToDouble(double[] d){
+        Double[] out = new Double[d.length];
+        for (int i = 0; i < d.length; i++) {
+            out[i] = d[i];
+        }
+        return out;
+    }
 
     public static double[] solve(Matrix left, double[] right) {
         double[][] A = left.data;
@@ -214,12 +262,16 @@ public class Matrix {
         return this;
     }
 
+    public Matrix clone(){
+        return new Matrix(this.data);
+    }
+
     @Override
     public String toString() {
         return "Matrix =\n" + stringArray(data);
     }
 
-    private static String stringArray(double[][] array){
+    public static String stringArray(double[][] array){
         String str = "";
         for(double[] d : array){
             for (double j : d){

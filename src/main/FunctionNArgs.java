@@ -1,5 +1,5 @@
 package main;
 
-public interface FunctionNargs<W,T> {
+public interface FunctionNArgs<W,T> {
     abstract W compute(T[] args);
 }
