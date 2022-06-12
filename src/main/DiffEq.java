@@ -199,7 +199,6 @@ public class DiffEq {
         double m1, m2, m3, m4, o = givenO;
         double n1, n2, n3, n4, p = givenP;
         h = (X - givenX) / (iterations);
-        System.out.println(h);
         for (int i = 0; i < iterations; i++) {
             k1 = f1Prime.compute(x, y, z, o, p);
             l1 = f2Prime.compute(x, y, z, o, p);
@@ -235,19 +234,33 @@ public class DiffEq {
     }
 
 
-
     public static void main(String[] args) {
         double mu = .1;
         double g = 9.81;
-        double[] b = DiffEq.rk4System4((t,x, y, vx, vy) -> {
-            return vx;
-        }, (t,x, y, vx, vy) -> {
-            return vy;
-        }, (t,x, y, vx, vy) -> {
-            return -mu * vx * Math.sqrt(vx *vx +vy *vy);
-        }, (t,x, y, vx, vy) -> {
-            return -g-mu * vy * Math.sqrt(vx *vx +vy *vy);
-        }, 99999, 0, 0, 5,  0, 30, 6);
-        System.out.println(b[0] + " " + b[1] + " " + b[2]  + " " + b[3]);
+        double omega = 9;
+        double s = .1;
+
+        for(int i = 0; i < 300; i ++) {
+            double[] b = DiffEq.rk4System4((t, x, y, vx, vy) -> {
+                return vx;
+            }, (t, x, y, vx, vy) -> {
+                return vy;
+            }, (t, x, y, vx, vy) -> {
+                Vector3D v = new Vector3D(0, vy, 0);
+                Vector3D omegaV = new Vector3D(0, 0, omega);
+                return -mu * vx * Math.sqrt(vx * vx + vy * vy) + s * v.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega);
+
+            }, (t, x, y, vx, vy) -> {
+                Vector3D v = new Vector3D(0, vy, 0);
+                Vector3D omegaV = new Vector3D(0, 0, omega);
+                return -g - mu * vy * Math.sqrt(vx * vx + vy * vy) + s * v.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega);
+            }, 55, 0, 0, i*.01+.01, 0, 30, 35);
+            System.out.println("(" + b[0] + "," + b[1] + ")");
+        }
+//        double vx = 5;
+//        double vy = 5;
+//        Vector3D v = new Vector3D(0, vy, 0);
+//        Vector3D omegaV = new Vector3D(0, 0, omega);
+//        System.out.println(v.crossProduct(omegaV).project(Vector3D.getI()) + " " + v.crossProduct(omegaV).project(Vector3D.getI()).getRadius());
     }
 }
