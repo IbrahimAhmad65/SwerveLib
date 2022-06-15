@@ -271,11 +271,13 @@ public class DiffEq {
 //            System.out.println("(" + j*.1 + "," + b[2] + ")");
 //        }
 
-        double voyx =-3;
+        double voyx = -3;
         double lastX = 0;
         double oldvoyx = -3;
         double lastmultiplier = 1;
-        for (int j = 0; j < 10; j++) {
+        System.out.println("(2,2.62)");
+        System.out.println("(2.4026,2.2999)");
+        for (int j = 0; j < 100; j++) {
             double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
                 return vy / vx;
             }, (x, y, vx, vy) -> {
@@ -283,29 +285,9 @@ public class DiffEq {
 
             }, (x, y, vx, vy) -> {
                 return (-g - mu * vy * Math.sqrt(vx * vx + vy * vy)) / vx;
-            }, 55, 5, 3, 0, 3, voyx);
-            System.out.println("(" + 0+ "," + b[0] + ")");
-            System.out.println("^ voyx : " + voyx);
-            if(j>1){
-                if(Math.abs(lastX) <Math.abs( b[0])){
-                    // last time was better
-                    voyx*=lastmultiplier;
-                    System.out.println("last was better");
-                } else{
-                    voyx = oldvoyx * oldvoyx/voyx;
-                    // this time was better
-                    System.out.println("this was better");
-                }
-                lastmultiplier = voyx/oldvoyx;
-                oldvoyx = voyx;
-            }else{
-                voyx*=.5;
-            }
-            lastX = b[0];
-//            System.out.println("(" + j+ "," + b[1] + ")");
-//            System.out.println("(" + j+ "," + b[2] + ")");
+            }, 55,2.4026 , 2.2999, j*.03, 1.5, -2.5);
+            System.out.println("(" + (j*.03) + "," + b[0] + ")");
         }
-        System.out.println(voyx);
 
 //        double vx = 5;
 //        double vy = 5;
