@@ -271,21 +271,17 @@ public class DiffEq {
 //            System.out.println("(" + j*.1 + "," + b[2] + ")");
 //        }
 
-        double voyx = -3;
-        double lastX = 0;
-        double oldvoyx = -3;
-        double lastmultiplier = 1;
-        System.out.println("(2,2.62)");
+        System.out.println("y>2.62");
+        System.out.println("x=2");
         System.out.println("(2.4026,2.2999)");
         for (int j = 0; j < 100; j++) {
             double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
                 return vy / vx;
             }, (x, y, vx, vy) -> {
                 return (-mu * vx * Math.sqrt(vx * vx + vy * vy)) / vx;
-
             }, (x, y, vx, vy) -> {
                 return (-g - mu * vy * Math.sqrt(vx * vx + vy * vy)) / vx;
-            }, 55,2.4026 , 2.2999, j*.03, 1.5, -2.5);
+            }, 55,2.4026 , 2.2999, j*.03, 2, -3);
             System.out.println("(" + (j*.03) + "," + b[0] + ")");
         }
 
