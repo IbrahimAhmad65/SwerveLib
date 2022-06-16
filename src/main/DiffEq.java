@@ -287,7 +287,7 @@ public class DiffEq {
 //                System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega) + ")");
                 return (-mu * vx * sqrt + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega)) / vx;
             }, (x, y, vx, vy) -> {
-                Vector3D vitr = new Vector3D(0,vy, 0);
+                Vector3D vitr = new Vector3D(0  ,vy, 0);
                 double sqrt = Math.sqrt(vx * vx + vy * vy);
                 Vector3D omegaV = new Vector3D(0, 0, omega);
 //                if(finalXCheck.get() == 10)
