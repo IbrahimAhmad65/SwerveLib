@@ -4,8 +4,8 @@ package main;
 public class  Vector2D {
 
     // Data in this class is stored in cartesian coordinates
-    double x;
-    double y;
+    private double x;
+    private double y;
 
     // Nothing gets passed into constructor
     public Vector2D() {
@@ -20,6 +20,7 @@ public class  Vector2D {
         setX(v2.getX() - v1.getX());
         setY(v2.getY() - v1.getY());
     }
+
 
     public static Vector2D fromPolar(double theta, double r) {
         Vector2D vector2D = new Vector2D();

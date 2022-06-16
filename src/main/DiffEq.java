@@ -1,6 +1,6 @@
 package main;
 
-import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 // not planning any implicit methods bc solving with newtons method for every iteration is worse than cranking up step size
 public class DiffEq {
@@ -233,62 +233,76 @@ public class DiffEq {
 
 
     public static void main(String[] args) {
-        double mu = .1;
         double g = 9.81;
-        double omega = -1;
-        double s = 0;
-//        for (int j = 0; j < 1000; j++) {
-//            for (int i = 0; i < 100; i++) {
-//                double[] b = DiffEq.rk4System4((t, x, y, vx, vy) -> {
-//                    return vx;
-//                }, (t, x, y, vx, vy) -> {
-//                    return vy;
-//                }, (t, x, y, vx, vy) -> {
-//                    Vector3D v = new Vector3D(0, vy, 0);
-//                    Vector3D omegaV = new Vector3D(0, 0, omega);
-//                    return -mu * vx * Math.sqrt(vx * vx + vy * vy) - s * v.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega);
-//
-//                }, (t, x, y, vx, vy) -> {
-//                    Vector3D v = new Vector3D(0, vy, 0);
-//                    Vector3D omegaV = new Vector3D(0, 0, omega);
-//                    return -g - mu * vy * Math.sqrt(vx * vx + vy * vy) - s * v.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega);
-//                }, 55, 0, 0, i * .03 + .01, j*.1, 30, 35);
-//            System.out.println("(" + b[0] + "," + b[1] + ")");
-//            }
+        double omega = 3;
+        double radius = .33;
+        double airDensity = 1.225;
 //        }
-//        for (int j = 0; j < 100; j++) {
+        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity;
+        double cd = .47;
+        double mu = .5 * airDensity * cd * Math.PI * radius * radius;
+//        double s = 0;
+        //        System.out.println(mu);
+//        System.out.println(s);
+
+//        System.out.println("y>=2.62");
+//        System.out.println("x=2");
+
+
+//        System.out.println("(2.4026,2.2999)");
+//        for (int j = 0; j < 400; j++) {
 //
-//            double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
-//                return vy / vx;
-//            }, (x, y, vx, vy) -> {
-//                return (-mu * vx * Math.sqrt(vx * vx + vy * vy)) / vx;
-//
-//            }, (x, y, vx, vy) -> {
-//                return (-g - mu * vy * Math.sqrt(vx * vx + vy * vy)) / vx;
-//            }, 55, 5, 3, j*.1, 3, -3);
-//            System.out.println("(" + j*.1 + "," + b[0] + ")");
-//            System.out.println("(" + j*.1 + "," + b[1] + ")");
-//            System.out.println("(" + j*.1 + "," + b[2] + ")");
+//            double[] b = DiffEq.rk4System4((t,x, y, vx, vy) -> {
+//                return vx;
+//            },(t,x, y, vx, vy) -> {
+//                return vy;
+//            }, (t,x, y, vx, vy) -> {
+//                Vector3D vitr = new Vector3D(vx, vy, 0);
+//                double sqrt = Math.sqrt(vx * vx + vy * vy);
+//                Vector3D omegaV = new Vector3D(0, 0, omega);
+//                return -(mu * vx * sqrt - s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega)) / vx;
+//            }, (t,x, y, vx, vy) -> {
+//                Vector3D vitr = new Vector3D(vx,vy, 0);
+//                double sqrt = Math.sqrt(vx * vx + vy * vy);
+//                Vector3D omegaV = new Vector3D(0, 0, omega);
+//                return -( g+ mu * vy * sqrt - s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega)) / vx;
+//            }, 55, 2, 2.5, j*.01, 2, 3,-3);
+//            System.out.println("(" + (b[0]) + "," + b[1] + ")");
 //        }
 
-        System.out.println("y>2.62");
-        System.out.println("x=2");
-        System.out.println("(2.4026,2.2999)");
+        int xCheck;
         for (int j = 0; j < 100; j++) {
+
+            int finalJ = j;
+            xCheck = 0;
+            AtomicInteger finalXCheck = new AtomicInteger(xCheck);
             double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
                 return vy / vx;
             }, (x, y, vx, vy) -> {
-                return (-mu * vx * Math.sqrt(vx * vx + vy * vy)) / vx;
+                Vector3D vitr = new Vector3D(vx, vy, 0);
+                double sqrt = Math.sqrt(vx * vx + vy * vy);
+                Vector3D omegaV = new Vector3D(0, 0, omega);
+//                finalXCheck.getAndIncrement();
+//                if(finalXCheck.get() == 10)
+                System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega) + ")");
+                return (-mu * vx * sqrt + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega)) / vx;
             }, (x, y, vx, vy) -> {
-                return (-g - mu * vy * Math.sqrt(vx * vx + vy * vy)) / vx;
-            }, 55,2.4026 , 2.2999, j*.03, 2, -3);
-            System.out.println("(" + (j*.03) + "," + b[0] + ")");
+                Vector3D vitr = new Vector3D(vx,vy, 0);
+                double sqrt = Math.sqrt(vx * vx + vy * vy);
+                Vector3D omegaV = new Vector3D(0, 0, omega);
+//                if(finalXCheck.get() == 10)
+//                    System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega) + ")");
+                return ( -g -  mu * vy * sqrt + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega)) / vx;
+            }, 55, 2, 2.5, j*.04, 2, -3);
+            System.out.println("(" + (j*.01) + "," + b[0] + ")");
         }
 
-//        double vx = 5;
-//        double vy = 5;
-//        Vector3D v = new Vector3D(0, vy, 0);
-//        Vector3D omegaV = new Vector3D(0, 0, omega);
-//        System.out.println(v.crossProduct(omegaV).project(Vector3D.getI()) + " " + v.crossProduct(omegaV).project(Vector3D.getI()).getRadius());
-    }
+//        double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
+//            return vy / vx;
+//        }, (x, y, vx, vy) -> {
+//            return (-mu * vx * Math.sqrt(vx * vx + vy * vy)) / vx;
+//        }, (x, y, vx, vy) -> {
+//            return (-g - mu * vy * Math.sqrt(vx * vx + vy * vy)) / vx;
+//        }, 55,2.4026 , 2.2999, j*.03, 2, -3);
+ }
 }
