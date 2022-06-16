@@ -238,9 +238,9 @@ public class DiffEq {
         double radius = .33;
         double airDensity = 1.225;
 //        }
-        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity;
+        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity/.27;
         double cd = .47;
-        double mu = .5 * airDensity * cd * Math.PI * radius * radius;
+        double mu = .5 * airDensity * cd * Math.PI * radius * radius/.27;
 //        double s = 0;
         //        System.out.println(mu);
 //        System.out.println(s);
@@ -279,15 +279,15 @@ public class DiffEq {
             double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
                 return vy / vx;
             }, (x, y, vx, vy) -> {
-                Vector3D vitr = new Vector3D(vx, vy, 0);
+                Vector3D vitr = new Vector3D(vx, 0, 0);
                 double sqrt = Math.sqrt(vx * vx + vy * vy);
                 Vector3D omegaV = new Vector3D(0, 0, omega);
 //                finalXCheck.getAndIncrement();
 //                if(finalXCheck.get() == 10)
-                System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega) + ")");
+//                System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega) + ")");
                 return (-mu * vx * sqrt + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega)) / vx;
             }, (x, y, vx, vy) -> {
-                Vector3D vitr = new Vector3D(vx,vy, 0);
+                Vector3D vitr = new Vector3D(0,vy, 0);
                 double sqrt = Math.sqrt(vx * vx + vy * vy);
                 Vector3D omegaV = new Vector3D(0, 0, omega);
 //                if(finalXCheck.get() == 10)
