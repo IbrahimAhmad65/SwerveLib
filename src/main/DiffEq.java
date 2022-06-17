@@ -234,7 +234,6 @@ public class DiffEq {
 
     public static void main(String[] args) {
         double g = 9.81;
-        double omega = 3;
         double radius = .33;
         double airDensity = 1.225;
 //        }
@@ -272,6 +271,7 @@ public class DiffEq {
 
         int xCheck;
         for (int j = 0; j < 100; j++) {
+            double omega = 3;
 
             int finalJ = j;
             xCheck = 0;
@@ -279,24 +279,26 @@ public class DiffEq {
             double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
                 return vy / vx;
             }, (x, y, vx, vy) -> {
-                Vector3D vitr = new Vector3D(vx, 0, 0);
+                Vector3D vitr = new Vector3D(0, vx, 0);
                 double sqrt = Math.sqrt(vx * vx + vy * vy);
                 Vector3D omegaV = new Vector3D(0, 0, omega);
 //                finalXCheck.getAndIncrement();
 //                if(finalXCheck.get() == 10)
 //                System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega) + ")");
-                return (-mu * vx * sqrt + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega)) / vx;
+                return (-mu * vx * sqrt + s * vitr.crossProduct(omegaV).getRadius() * omega / Math.abs(omega)) / vx;
             }, (x, y, vx, vy) -> {
-                Vector3D vitr = new Vector3D(0  ,vy, 0);
+                Vector3D vitr = new Vector3D(vy  ,0, 0);
                 double sqrt = Math.sqrt(vx * vx + vy * vy);
                 Vector3D omegaV = new Vector3D(0, 0, omega);
 //                if(finalXCheck.get() == 10)
 //                    System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega) + ")");
-                return ( -g -  mu * vy * sqrt + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega)) / vx;
-            }, 55, 2, 2.5, j*.04, 2, -3);
+                return ( -g -  mu * vy * sqrt + s * vitr.crossProduct(omegaV).getRadius() * omega / Math.abs(omega)) / vx;
+            }, 55, 2, 2.5, j*.04, 2, -3 );
             System.out.println("(" + (j*.01) + "," + b[0] + ")");
         }
 
+
+//        fmore
 //        double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
 //            return vy / vx;
 //        }, (x, y, vx, vy) -> {
