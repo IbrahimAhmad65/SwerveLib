@@ -7,7 +7,7 @@ public interface Blob {
         return c;
     }
 
-    default Blob[] peel(){
+    default Blob[] peel() {
         return new Blob[]{c};
     }
 }

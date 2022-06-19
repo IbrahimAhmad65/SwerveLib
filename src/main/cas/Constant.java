@@ -1,10 +1,13 @@
 package main.cas;
 
-public class Constant implements Argument{
+import java.util.Objects;
+
+public class Constant implements Argument {
 
     private double number;
     Blob b;
-    public Constant(double number){
+
+    public Constant(double number) {
         this.number = number;
         b = this;
     }
@@ -39,5 +42,18 @@ public class Constant implements Argument{
 
     public Blob[] peel() {
         return new Blob[]{b};
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Constant constant = (Constant) o;
+        return Double.compare(constant.number, number) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number);
     }
 }

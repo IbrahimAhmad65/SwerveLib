@@ -1,6 +1,6 @@
 package main.cas;
 
-public interface Argument extends Blob{
+public interface Argument extends Blob {
 
     boolean isConstant();
 

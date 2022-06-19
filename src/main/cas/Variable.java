@@ -2,18 +2,19 @@ package main.cas;
 
 import java.util.Objects;
 
-public class Variable implements Argument{
+public class Variable implements Argument {
 
     private String name;
     private Variable[] dOrI;
 
     private Blob b;
-    public Variable(String name){
+
+    public Variable(String name) {
         this.name = name;
         this.b = this;
     }
 
-    public Variable(String name, Variable... differentiableOrIntegrtable){
+    public Variable(String name, Variable... differentiableOrIntegrtable) {
         this.name = name;
         this.dOrI = differentiableOrIntegrtable;
 
@@ -29,8 +30,8 @@ public class Variable implements Argument{
     }
 
     public boolean isIntegralDefined(Argument d) {
-        for (Variable a: dOrI) {
-            if(a.equals(d)){
+        for (Variable a : dOrI) {
+            if (a.equals(d)) {
                 return true;
             }
         }
@@ -41,7 +42,7 @@ public class Variable implements Argument{
         return null;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
@@ -63,5 +64,6 @@ public class Variable implements Argument{
     public Blob[] peel() {
         return new Blob[]{b};
     }
+
 
 }
