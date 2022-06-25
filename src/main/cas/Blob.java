@@ -10,4 +10,8 @@ public interface Blob {
     default Blob[] peel() {
         return new Blob[]{c};
     }
+
+    void replace(Blob replacand, Blob replacer);
+
+    void cascade();
 }

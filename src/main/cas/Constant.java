@@ -56,4 +56,19 @@ public class Constant implements Argument {
     public int hashCode() {
         return Objects.hash(number);
     }
+
+    @Override
+    public String toString() {
+        return " " + number + " ";
+    }
+
+    public void replace(Blob replacand, Blob replacer) {
+        if(replacand.equals(this)){
+            this.number = ((Constant) replacer).number;
+        }
+    }
+
+    @Override
+    public void cascade() {
+    }
 }

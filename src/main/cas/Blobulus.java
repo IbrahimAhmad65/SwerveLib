@@ -1,11 +1,10 @@
 package main.cas;
 
-public class Negate implements Operation{
-
+public class Blobulus implements Blob {
     Blob a;
     Blob b;
 
-    public Negate(Blob a) {
+    public Blobulus(Blob a) {
         this.a = a;
         this.b = this;
     }
@@ -21,31 +20,23 @@ public class Negate implements Operation{
     }
 
     @Override
-    public Blob operate() {
-        if (a.getClass() == Constant.class) {
-            return new Constant(-((Constant) a).get());
-        }
-        return b;
-    }
-
-    @Override
-    public String toString() {
-        return " - " + a.toString();
-    }
-
     public void replace(Blob replacand, Blob replacer) {
-        if(a.equals(replacand)){
+        if (replacand.equals(a)) {
             a = replacer;
         }
         a.replace(replacand,replacer);
-        this.operate();
     }
 
     @Override
     public void cascade() {
         a.cascade();
-        if(a.getClass().getInterfaces()[0] == Operation.class){
+        if (a.getClass().getInterfaces()[0] == Operation.class) {
             a = ((Operation) a).operate();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "" + a;
     }
 }

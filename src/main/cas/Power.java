@@ -44,4 +44,31 @@ public class Power implements Operation {
     public int hashCode() {
         return Objects.hash(a, c);
     }
+
+    @Override
+    public String toString() {
+        return "((" + a.toString()+ ") ^ (" + c.toString() + "))";
+    }
+    public void replace(Blob replacand, Blob replacer) {
+        if(a.equals(replacand)){
+            a = replacer;
+        }
+        if(c.equals(replacand)){
+            c = replacer;
+        }
+        a.replace(replacand,replacer);
+        c.replace(replacand,replacer);
+    }
+
+    @Override
+    public void cascade() {
+        a.cascade();
+        c.cascade();
+        if(c.getClass().getInterfaces()[0] == Operation.class){
+            c = ((Operation) c).operate();
+        }
+        if(a.getClass().getInterfaces()[0] == Operation.class){
+            a = ((Operation) a).operate();
+        }
+    }
 }
