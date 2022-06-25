@@ -1,0 +1,5 @@
+#!/bin/sh
+read class
+jar cf /home/ibrahim/robotics/SwerveLib/src/'SwerveLib'.jar /home/ibrahim/robotics/SwerveLib/src/main/*
+/home/ibrahim/.jdks/azul-13.0.9/bin/java -javaagent:/usr/share/idea/lib/idea_rt.jar=44003:/usr/share/idea/bin -Dfile.encoding=UTF-8 -classpath /home/ibrahim/robotics/SwerveLib/src/SwerveLib.jar main.$class
+

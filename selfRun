@@ -1,0 +1,14 @@
+#!/bin/sh
+#test3 = echo $test | awk -F ';' '{ print $1}';
+#test2 = echo $2 | awk -F '.java' '{print$1}';
+period='.';
+#echo $test3$period$test2;
+#read test test2 <<< echo $1 | awk -F 'package ' '{print $2}'
+#echo $test
+#echo $test2
+#echo $2 = 
+
+test=$(echo $1 | awk -F 'package ' '{ print $2}')
+test2=$(echo $2 | awk -F '.java' '{print $1}')
+   
+/home/ibrahim/.jdks/azul-13.0.9/bin/java -javaagent:/usr/share/idea/lib/idea_rt.jar=44003:/usr/share/idea/bin -Dfile.encoding=UTF-8 -classpath /home/ibrahim/robotics/SwerveLib/out/production/SwerveLib $test$period$test2
