@@ -1,5 +1,7 @@
 package main.cas;
 
 public interface FunctionCAS extends Blob {
-    Blob compute(Blob... args);
+    Blob computeSingle(Blob arg);
+
+    Blob computeMulti(Blob arg, Blob[] otherArgs);
 }

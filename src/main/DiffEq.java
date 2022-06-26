@@ -294,7 +294,7 @@ public class DiffEq {
 //                    System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega) + ")");
                 return ( -g -  mu * vy * sqrt + s * vitr.crossProduct(omegaV).getRadius() * omega / Math.abs(omega)) / vx;
             }, 55, 2, 2.5, j*.04, 2, -3 );
-            System.out.println("(" + (j*.01) + "," + b[0] + ")");
+//            System.out.println("(" + (j*.01) + "," + b[0] + ")");
         }
 
 

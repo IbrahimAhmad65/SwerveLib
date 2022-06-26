@@ -52,7 +52,7 @@ public class LinearlyInterpLUT {
                 return (low + (key - Math.floor(key)));
             }
         }
-        return -42567;
+        return Double.MIN_NORMAL;
     }
 
     public static void main(String[] args) {

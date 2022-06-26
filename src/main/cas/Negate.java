@@ -27,4 +27,25 @@ public class Negate implements Operation{
         }
         return b;
     }
+
+    @Override
+    public String toString() {
+        return " - " + a.toString();
+    }
+
+    public void replace(Blob replacand, Blob replacer) {
+        if(a.equals(replacand)){
+            a = replacer;
+        }
+        a.replace(replacand,replacer);
+        this.operate();
+    }
+
+    @Override
+    public void cascade() {
+        a.cascade();
+        if(a.getClass().getInterfaces()[0] == Operation.class){
+            a = ((Operation) a).operate();
+        }
+    }
 }

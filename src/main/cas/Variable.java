@@ -65,5 +65,19 @@ public class Variable implements Argument {
         return new Blob[]{b};
     }
 
+    @Override
+    public String toString() {
+        return " " + name + " ";
+    }
 
+    public void replace(Blob replacand, Blob replacer) {
+        System.out.println("var rep hit");
+        if(replacand.equals(this)){
+            this.name = ((Variable) replacer).name;
+        }
+    }
+
+    @Override
+    public void cascade() {
+    }
 }

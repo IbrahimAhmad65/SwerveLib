@@ -1,0 +1,4 @@
+#!/bin/sh
+read class
+jar cf /home/ibrahim/robotics/SwerveLib/src/'SwerveLib'.jar /home/ibrahim/robotics/SwerveLib/src/main/*
+java -cp /home/ibrahim/robotics/SwerveLib/src/SwerveLib.jar main.$class
