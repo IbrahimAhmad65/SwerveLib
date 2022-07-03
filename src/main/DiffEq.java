@@ -177,7 +177,7 @@ public class DiffEq {
         double radius = .33;
         double airDensity = 1.225;
 //        }
-        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity/.27;
+        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity/.27 * 0;
         double cd = .47;
         double mu = .5 * airDensity * cd * Math.PI * radius * radius/.27;
 //        double s = 0;
@@ -233,8 +233,13 @@ public class DiffEq {
 //                if(finalXCheck.get() == 10)
 //                    System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega) + ")");
                 return ( -g -  mu * vy * sqrt + s * vitr.crossProduct(omegaV).getRadius() * omega / Math.abs(omega)) / vx;
-            }, 55, 2, 2.5, j*.04, 2, -3 );
-//            System.out.println("(" + (j*.01) + "," + b[0] + ")");
+            }, 55, 2, 2.5, j*.01, 2, -3 );
+            System.out.println("(" + (j*.01) + "," + b[0] + ")");
+            System.out.println("(" + (j*.01) + "," + b[2] + ")");
+            System.out.println("(" + (j*.01) + "," + b[1] + ")");
+
+            //            System.out.println("polygon( " + "(" + (j*.01) + "," + b[0] + "),(" + (b[1]) + "," + b[2] + "))" );
+//            System.out.println("\\operatorname{polygon}\\left(\\left(" +(j*.01) +","+b[0] +"+\\right),\\left(" +b[1] +","+b[2] +"\\right)\\right)");
         }
 
 

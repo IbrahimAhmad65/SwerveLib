@@ -1,0 +1,13 @@
+#!/bin/sh
+read class
+cd /home/ibrahim/robotics/SwerveLib/src/
+rm META-INF/MANIFEST.MF
+echo "Manifest-Version: 1.0
+Main-Class: main."$class > META-INF/MANIFEST.MF
+cat ../mFoot >> META-INF/MANIFEST.MF
+rm -f /home/ibrahim/robotics/SwerveLib/src/main/*.class
+javac /home/ibrahim/robotics/SwerveLib/src/main/*.java -Xlint:unchecked
+jar cmvf0 META-INF/MANIFEST.MF ../SwerveLib.jar ./main/*.class > garboFile
+java -jar ../SwerveLib.jar
+rm garboFile
+rm -f /home/ibrahim/robotics/SwerveLib/src/main/*.class
