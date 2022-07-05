@@ -17,9 +17,6 @@ public class JacobianDiscrete2D {
     }
 
     public boolean getCritical(double error){
-//        System.out.println(getJacobian().getRank();
-//        System.out.println(getJacobian());
-//        return getJacobian().getRank() < getJacobian().getMaxRank();
         return Math.abs(getJacobian().getData()[0][0]) <= error || Math.abs(getJacobian().getData()[1][0]) <= error;
     }
 }
