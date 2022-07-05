@@ -1,2 +1,9 @@
 Manifest-Version: 1.0
-Main-Class: main.Main
+Main-Class: main.Matrix
+Name: ibrahim/SwerveLib
+Specification-Title: "Math Utility Classes" 
+Specification-Version: "1.0"
+Specification-Vendor: "Kool Cid Qlub".
+Implementation-Title: "ibrahim.SwerveLib" 
+Implementation-Version: "build1"
+Implementation-Vendor: "Kool Cid Qlub"

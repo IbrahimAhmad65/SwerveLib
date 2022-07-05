@@ -21,66 +21,6 @@ public class DiffEq {
         return y;
     }
 
-    // broken no use
-    public static Vector rk4System(double X, double initialX, double iterations, Vector initialConditions, FunctionNArgs... functions) {
-        if (true) {
-            throw new RuntimeException("This method bad lol");
-        }
-        Matrix k1, k2, k3, k4;
-        k1 = new Matrix(1, initialConditions.getDimensions());
-        k2 = new Matrix(1, initialConditions.getDimensions());
-        k3 = new Matrix(1, initialConditions.getDimensions());
-        k4 = new Matrix(1, initialConditions.getDimensions());
-        Vector vars = new Vector(initialConditions.getDimensions() + 1, Vector.DimensionError.ZERO);
-        System.arraycopy(initialConditions.getData(), 0, vars.getData(), 1, initialConditions.getData().length);
-
-        vars.getData()[0] = initialX;
-        System.out.println(vars.getData().length + " " + functions.length);
-        double h = (X - initialX) / (iterations);
-        for (int i = 0; i < iterations; i++) {
-//            k2.fill(0);
-//            k3.fill(0);
-//            k4.fill(0);
-            for (int j = 0; j < functions.length; j++) {
-                k1.getData()[0][j] = (double) functions[j].compute(vars.getDataDouble());
-            }
-
-            for (int j = 0; j < functions.length; j++) {
-                k2.getData()[0][j] = (double) functions[j].compute(Matrix.doubleToDouble(k1.clone().scale(h / 2).add(new Matrix(new double[][]{vars.getData()})).getData()[0]));
-            }
-
-            for (int j = 0; j < functions.length; j++) {
-                k3.getData()[0][j] = (double) functions[j].compute(Matrix.doubleToDouble(k2.clone().scale(h / 2).add(new Matrix(new double[][]{vars.getData()})).getData()[0]));
-            }
-            for (int j = 0; j < functions.length; j++) {
-                k4.getData()[0][j] = (double) functions[j].compute(Matrix.doubleToDouble(k3.clone().scale(h).add(new Matrix(new double[][]{vars.getData()})).getData()[0]));
-            }
-//
-//            k2 = f1Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2);
-//            l2 = f2Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2);
-//            m2 = f3Prime.compute(x + h / 2, y + h * k1 / 2, z + h * l1 / 2, o + h * m1 / 2);
-//
-//            k3 = f1Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2);
-//            l3 = f2Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2);
-//            m3 = f3Prime.compute(x + h / 2, y + h * k2 / 2, z + h * l2 / 2, o + h * m2 / 2);
-//
-//
-//            k4 = f1Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3);
-//            l4 = f2Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3);
-//            m4 = f3Prime.compute(x + h, y + h * k3, z + h * l3, o + h * m3);
-//
-//
-//            y += 1.0 / 6 * h * (k1 + 2 * k2 + 2 * k3 + k4);
-//            z += 1.0 / 6 * h * (l1 + 2 * l2 + 2 * l3 + l4);
-//            o += 1.0 / 6 * h * (m1 + 2 * m2 + 2 * m3 + m4);
-            for (int j = 1; j < functions.length + 1; j++) {
-                vars.getData()[j] += 1 / 6.0 * h * (k1.getData()[0][j - 1] + 2 * k2.getData()[0][j - 1] + 2 * k3.getData()[0][j - 1] + k4.getData()[0][j - 1]);
-            }
-            vars.getData()[0] += h;
-        }
-        return vars;
-    }
-
     // Really bad, rk4 is just better. cant think of when euler is better
     public static double forwardEuler(Function2Args<Double, Double> fPrime, int iterations, double givenX, double givenY, double X) {
         double y = givenY, x = givenX, h = (X - givenX) / (iterations);
@@ -237,7 +177,7 @@ public class DiffEq {
         double radius = .33;
         double airDensity = 1.225;
 //        }
-        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity/.27;
+        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity/.27 * 0;
         double cd = .47;
         double mu = .5 * airDensity * cd * Math.PI * radius * radius/.27;
 //        double s = 0;
@@ -293,8 +233,13 @@ public class DiffEq {
 //                if(finalXCheck.get() == 10)
 //                    System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega) + ")");
                 return ( -g -  mu * vy * sqrt + s * vitr.crossProduct(omegaV).getRadius() * omega / Math.abs(omega)) / vx;
-            }, 55, 2, 2.5, j*.04, 2, -3 );
-//            System.out.println("(" + (j*.01) + "," + b[0] + ")");
+            }, 55, 2, 2.5, j*.01, 2, -3 );
+            System.out.println("(" + (j*.01) + "," + b[0] + ")");
+            System.out.println("(" + (j*.01) + "," + b[2] + ")");
+            System.out.println("(" + (j*.01) + "," + b[1] + ")");
+
+            //            System.out.println("polygon( " + "(" + (j*.01) + "," + b[0] + "),(" + (b[1]) + "," + b[2] + "))" );
+//            System.out.println("\\operatorname{polygon}\\left(\\left(" +(j*.01) +","+b[0] +"+\\right),\\left(" +b[1] +","+b[2] +"\\right)\\right)");
         }
 
 
