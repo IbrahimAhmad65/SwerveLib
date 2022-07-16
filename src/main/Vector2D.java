@@ -1,7 +1,9 @@
 package main;
 
+import java.util.Objects;
+
 // Class for handleing all forms of vector2D math
-public class  Vector2D {
+public class  Vector2D implements Comparable{
 
     // Data in this class is stored in cartesian coordinates
     private double x;
@@ -140,6 +142,15 @@ public class  Vector2D {
         return Math.sqrt(a * a + b * b);
     }
 
+    public static Vector2D[] getVectorFromArr(double[] d){
+        double len = d.length/2.0;
+        Vector2D[] v = new Vector2D[(int)Math.floor(len)];
+        len = Math.floor(d.length/2.0)*2;
+        for (int i = 0; i < (int) len; i+=2) {
+            v[i/2] = new Vector2D(d[i],d[i+1]);
+        }
+        return v;
+    }
     public double getDistance(Vector2D vector2D) {
         return pythagorean(x - vector2D.x, y - vector2D.y);
     }
@@ -154,7 +165,35 @@ public class  Vector2D {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector2D vector2D = (Vector2D) o;
+        return (x - vector2D.x)<1e-4 && Math.abs(vector2D.y -  y)< 1e-4;
+    }
+
+    public static void main(String[] args) {
+        for (Vector2D j: Vector2D.getVectorFromArr(new double[]{6,7,8,9,1,2,8,6,3,1,4,7,8,93,})) {
+            System.out.println(j);
+        }
+    }
+
+    public Vector2D subtract(Vector2D v){
+        return new Vector2D(x-v.x,y-v.y);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    @Override
     public String toString() {
-        return "Vector2D{" + "x=" + x + ", y=" + y + '}';
+        return "(" + "" + x + "," + y + ')';
+    }
+
+    // so smart
+    @Override
+    public int compareTo(Object o) {
+        return (int)(this.clone().scale(100).getMagnitude() - ((Vector2D) o).clone().scale(100).getMagnitude());
     }
 }

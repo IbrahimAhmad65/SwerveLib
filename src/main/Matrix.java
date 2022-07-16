@@ -91,6 +91,7 @@ public class Matrix {
         }
     }
 
+
     public Matrix scale(double scalar) {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
@@ -98,6 +99,24 @@ public class Matrix {
             }
         }
         return this;
+    }
+
+    public void setRow(int row, double[] rowData){
+        data[row] = rowData;
+    }
+
+    public Vector2D[] get2DVector(int start){
+        Vector2D[] v = new Vector2D[data.length];
+        for (int i = 0; i < data.length; i++) {
+            v[i] = new Vector2D( data[i][start],data[i][start+1]);
+        }
+        return v;
+    }
+
+    public void setRow(int row, Double[] rowData){
+        for (int i = 0; i < rowData.length; i++) {
+            data[row][i] = rowData[i];
+        }
     }
 
     public static double[] DoubleTodouble(Double[] d) {

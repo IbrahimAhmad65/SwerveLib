@@ -56,7 +56,7 @@ public class LinearlyInterpLUT {
     }
 
     public static void main(String[] args) {
-        LinearlyInterpLUT bd = new LinearlyInterpLUT(new double[]{0, 1.6, 8, 54, 96}, new double[]{1, 2, 3, 4, 5});
+        LinearlyInterpLUT bd = new LinearlyInterpLUT(new double[]{0, 1.6, 8, 54, 96}, new double[]{1, 2, 3, 4, 3});
         double b = bd.get(138);
         System.out.println(b);
     }
