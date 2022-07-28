@@ -46,8 +46,8 @@ public class SplineGrapher extends JFrame {
                 double y = height - (int) (followerBasic.get(pos).getY() * height) + height/2;
 //                System.out.println("x:" + x);
 //                System.out.println("y:" + y);
-//                System.out.println(followerBasic.get());
-                pos.add(new Vector2D(x,y).scale(.001));
+                System.out.println(followerBasic.get(new Vector2D(.5,1)));
+//                pos.add(new Vector2D(x,y).scale(.001));
                 g.drawRoundRect((int)pos.getX(),(int)pos.getY(),5,5,1,1);
             }
         };
@@ -65,10 +65,11 @@ public class SplineGrapher extends JFrame {
         SplinePoint[] splinePoints1 = {
                 new SplinePoint(new Vector2D(.5,1),new Vector2D(1,3)),
                 new SplinePoint(new Vector2D(.6,1),new Vector2D(1,3)),
-                new SplinePoint(new Vector2D(.1,.1),new Vector2D(1,1))};
+                new SplinePoint(new Vector2D(.1,.1),new Vector2D(1,1))
+        };
         SplinePoint[] splinePoints = {new SplinePoint(new Vector2D(.1,.1),new Vector2D(1,1)),
                 new SplinePoint(new Vector2D(.1,1),new Vector2D(1,2))};
-        BSplineH b = new BSplineH(new Vector2D(-1,-1),new Vector2D(1,1),.01,.1,splinePoints1);
+        BSplineH b = new BSplineH(.01,.1,splinePoints1);
         int x = 1920/2;
         int y = 720/2;
         SplineGrapher s = new SplineGrapher(b,x,y);

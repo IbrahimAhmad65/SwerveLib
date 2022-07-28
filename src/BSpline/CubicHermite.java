@@ -89,21 +89,34 @@ public class CubicHermite {
             Vector2D pos;
             Vector2D newPos;
             Vector2D vel;
+            double h = .0001;
             if (finalFlip){
                 pos = new Vector2D(one[0] + two[0] * (xS - finalX1S) + three[0]
                         * (xS - finalX1S) * (xS - finalX1S) + four * (xS - finalX2S) * (xS - finalX1S) * (xS - finalX1S),xS);
-                xS += .0001;
+                xS += h;
                 newPos = new Vector2D(one[0] + two[0] * (xS - finalX1S) + three[0]
                         * (xS - finalX1S) * (xS - finalX1S) + four * (xS - finalX2S) * (xS - finalX1S) * (xS - finalX1S),xS);
-                vel = newPos.clone().subtract(pos).scale(1/.0001);
+                vel = newPos.clone().subtract(pos).scale(1/h);
+                if(newPos.clone().subtract(pos).getX() < 0){
+                    vel.scaleX(-1);
+                }
+                if(newPos.clone().subtract(pos).getY() < 0){
+                    vel.scaleY(-1);
+                }
                 return new SplinePoint(pos,vel);
             }
             pos = new Vector2D(xS,one[0] + two[0] * (xS - finalX1S) + three[0]
                     * (xS - finalX1S) * (xS - finalX1S) + four * (xS - finalX2S) * (xS - finalX1S) * (xS - finalX1S));
-            xS += .0001;
+            xS += h;
             newPos = new Vector2D(xS,one[0] + two[0] * (xS - finalX1S) + three[0]
                     * (xS - finalX1S) * (xS - finalX1S) + four * (xS - finalX2S) * (xS - finalX1S) * (xS - finalX1S));
-            vel = newPos.clone().subtract(pos).scale(1/.0001);
+            vel = newPos.clone().subtract(pos).scale(1/h);
+            if(newPos.clone().subtract(pos).getX() < 0){
+                vel.scaleX(-1);
+            }
+            if(newPos.clone().subtract(pos).getY() < 0){
+                vel.scaleY(-1);
+            }
             return new SplinePoint(pos,vel);
         };
     }

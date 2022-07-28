@@ -75,7 +75,7 @@ public class SplinerGrapher extends JFrame {
                 new SplinePoint(new Vector2D(-.5,.3),new Vector2D(1,3))};
         SplinePoint[] splinePoints = {new SplinePoint(new Vector2D(.1,.1),new Vector2D(1,1)),
                 new SplinePoint(new Vector2D(.1,1),new Vector2D(1,2))};
-        BSplineH b = new BSplineH(new Vector2D(-1,-1),new Vector2D(1,1),.01,.1,splinePoints1);
+        BSplineH b = new BSplineH(.01,.1,splinePoints1);
         int x = 1920/5;
         int y = 720/5;
         SplinerGrapher s = new SplinerGrapher(b,x,y);
