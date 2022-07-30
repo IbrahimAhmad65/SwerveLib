@@ -1,0 +1,20 @@
+#!/bin/sh
+#rm META-INF/MANIFEST.MF
+echo "Manifest-Version: 1.0
+Main-Class: run.GuiGeneration" > META-INF/MANIFEST.MF
+cat ../mFoot >> META-INF/MANIFEST.MF
+rm -f ./SplineGenerator/Applied/*.class
+rm -f ./SplineGenerator/Applied/LegacyVersions/*.class
+rm -f ./SplineGenerator/Splines/*.class
+rm -f ./run/*.class
+javac ./run/*.java -Xlint:unchecked
+javac ./SplineGenerator/Applied/*.class -Xlint:unchecked
+javac ./SplineGenerator/Applied/LegacyVersions/*.clas -Xlint:unchecked
+javac ./SplineGenerator/Splines/*.class -Xlint:unchecked
+jar cmvf0 META-INF/MANIFEST.MF ../SwerveLib.jar ./run/*.class > garboFile
+jar umvf0 META-INF/MANIFEST.MF ../SwerveLib.jar ./SplineGenerator/Applied/*.class > garboFile
+jar umvf0 META-INF/MANIFEST.MF ../SwerveLib.jar ./SplineGenerator/Splines/*.class > garboFile
+jar umvf0 META-INF/MANIFEST.MF ../SwerveLib.jar ./SplineGenerator/Splines/*.class > garboFile
+java -jar ../SwerveLib.jar
+rm garboFile
+rm -f ./run/*.class

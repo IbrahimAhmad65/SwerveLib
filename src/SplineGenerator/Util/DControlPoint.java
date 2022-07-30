@@ -28,4 +28,12 @@ public class DControlPoint {
         this.values.addAll(Arrays.asList(values));
     }
 
+    @Override
+    public String toString() {
+        String t = new String();
+        for (DVector d: values) {
+            t += d.toString();
+        }
+        return t;
+    }
 }

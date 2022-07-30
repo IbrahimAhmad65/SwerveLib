@@ -68,7 +68,7 @@ public class BSplineFollowerBasic {
         BSplineFollowerBasic followerBasic = new BSplineFollowerBasic(b, new Waypoint[]{}, .01, .01, 1, .1);
         System.out.println(b.findNearestPoint(new Vector2D(.5,1)));
         Vector2D pos = new Vector2D(.5, 1);
-        if (true) {
+        if (false) {
             b.printSplinePos();
         } else {
             for (int i = 0; i < 1500; i++) {

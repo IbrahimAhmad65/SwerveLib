@@ -1,8 +1,10 @@
 package run;
 
-import BSpline.BSplineH;
-import BSpline.SplinePoint;
-import main.Vector2D;
+import SplineGenerator.Splines.PolynomicSpline;
+import SplineGenerator.Splines.Spline;
+import SplineGenerator.Util.DControlPoint;
+import SplineGenerator.Util.DVector;
+import SplineGenerator.Util.InterpolationInfo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,7 +19,7 @@ public class GuiGeneration {
     public static void main(String[] args) {
         ArrayList<String[]> input = new ArrayList<String[]>();
         try {
-            File myObj = new File("C:\\Users\\galaly\\in.txt");
+            File myObj = new File("C:\\Users\\galaly\\robotics\\splineUtil\\in.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -28,19 +30,60 @@ public class GuiGeneration {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        SplinePoint[] splinePoints = new SplinePoint[input.size()];
+        DControlPoint[] arr = new DControlPoint[input.size()];
         for (int i = 0; i < input.size(); i++) {
 //            String temp = input.get(i).s;
-            Vector2D v1 = new Vector2D(Double.parseDouble(input.get(i)[0]),Double.parseDouble(input.get(i)[1]));
-            Vector2D v2 = new Vector2D(Double.parseDouble(input.get(i)[2]),Double.parseDouble(input.get(i)[3]));
-
-            splinePoints[i] = new SplinePoint(v1,v2);
+            if(i == 0 || i == input.size() - 1){
+                DVector v1 = new DVector(Double.parseDouble(input.get(i)[0]),Double.parseDouble(input.get(i)[1]));
+                DVector v2 = new DVector(Double.parseDouble("1"),Double.parseDouble("2"));
+                arr[i] = new DControlPoint(v1,v2, new DVector(0,0));
+            } else{
+                DVector v1 = new DVector(Double.parseDouble(input.get(i)[0]),Double.parseDouble(input.get(i)[1]));
+                DVector v2 = new DVector(Double.parseDouble("1"),Double.parseDouble("2"));
+                arr[i] = new DControlPoint(v1,v2);
+            }
         }
-        BSplineH bSplineH = new BSplineH(.01,.01,splinePoints);
+
+
+
+
+        PolynomicSpline spline = new PolynomicSpline(2);
+        spline.setPolynomicOrder(5);
+        spline.closed = false;
+        InterpolationInfo c1 = new InterpolationInfo();
+        c1.interpolationType = Spline.InterpolationType.Linked;
+        c1.endBehavior = Spline.EndBehavior.Hermite;
+        spline.interpolationTypes.add(c1);
+
+        InterpolationInfo c2 = new InterpolationInfo();
+        c2.interpolationType = Spline.InterpolationType.Linked;
+        c2.endBehavior = Spline.EndBehavior.Hermite;
+        spline.interpolationTypes.add(c2);
+
+        InterpolationInfo c3 = new InterpolationInfo();
+        c3.interpolationType = Spline.InterpolationType.Linked;
+        c3.endBehavior = Spline.EndBehavior.None;
+        spline.interpolationTypes.add(c3);
+
+        InterpolationInfo c4 = new InterpolationInfo();
+        c4.interpolationType = Spline.InterpolationType.Linked;
+        c4.endBehavior = Spline.EndBehavior.None;
+        spline.interpolationTypes.add(c4);
+
+        double counter = 0;
+        // Create Necessary Equations
+        for(DControlPoint splinePoint : arr){
+            spline.addControlPoint(splinePoint);
+        }
+        spline.generate();
+        spline.takeNextDerivative();
+
+
             try {
-                FileWriter myWriter = new FileWriter("C:\\Users\\galaly\\out.txt");
-                for (double i = 0; i < bSplineH.getEquationNumber(); i+= bSplineH.getT()) {
-                    myWriter.write("" + bSplineH.evaluatePos(i)+"\n2");
+                FileWriter myWriter = new FileWriter("C:\\Users\\galaly\\robotics\\splineUtil\\out.txt");
+                for (double i = 0; i < input.size() - 1; i+= .05) {
+                    myWriter.write(spline.get(i).get(0) + ","+ spline.get(i).get(1) +"\n");
+                    System.out.println(spline.get(i));
                 }
                 myWriter.close();
             } catch (IOException e) {
