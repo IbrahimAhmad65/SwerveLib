@@ -32,7 +32,6 @@ public class GuiGeneration {
         }
         DControlPoint[] arr = new DControlPoint[input.size()];
         for (int i = 0; i < input.size(); i++) {
-//            String temp = input.get(i).s;
             if(i == 0 || i == input.size() - 1){
                 DVector v1 = new DVector(Double.parseDouble(input.get(i)[0]),Double.parseDouble(input.get(i)[1]));
                 DVector v2 = new DVector(Double.parseDouble("1"),Double.parseDouble("2"));
@@ -83,7 +82,6 @@ public class GuiGeneration {
                 FileWriter myWriter = new FileWriter("C:\\Users\\galaly\\robotics\\splineUtil\\out.txt");
                 for (double i = 0; i < input.size() - 1; i+= .05) {
                     myWriter.write(spline.get(i).get(0) + ","+ spline.get(i).get(1) +"\n");
-                    System.out.println(spline.get(i));
                 }
                 myWriter.close();
             } catch (IOException e) {

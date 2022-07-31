@@ -2,6 +2,7 @@ package SplineGenerator.Util;
 
 import SplineGenerator.GUI.Displayable;
 import SplineGenerator.GUI.DisplayGraphics;
+import main.Vector2D;
 
 /**
  * A class for holding a multidimensional point
@@ -243,6 +244,10 @@ public class DPoint implements Displayable {
         }
 
         return point;
+    }
+
+    public Vector2D toVector2D(){
+        return new Vector2D(get(0),get(1));
     }
 
     /**

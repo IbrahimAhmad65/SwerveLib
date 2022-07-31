@@ -65,6 +65,12 @@ public abstract class Spline {
     private SplineType splineType;
 
     /**
+     * The total number of control points
+     * */
+
+    private int numControlPoints = 0;
+
+    /**
      * Default and only constructor for the spline super-class, all fields in this class will be initialized here if necessary
      *
      * @param splineType The type of spline to be generated, this will be always determined by the subclass's constructor
@@ -93,6 +99,14 @@ public abstract class Spline {
     }
 
     /**
+     * A method to get the number of control points used
+     * */
+
+    public int getNumControlPoints() {
+        return numControlPoints;
+    }
+
+    /**
      * A method to tell if the spline is registered as closed or not
      *
      * @return Whether or not the spline is closed
@@ -118,6 +132,7 @@ public abstract class Spline {
     public void addControlPoint(DControlPoint controlPoint) {
         controlPoint.t = controlPoints.size();
         controlPoints.add(controlPoint);
+        numControlPoints++;
     }
 
     /**

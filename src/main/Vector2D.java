@@ -1,5 +1,7 @@
 package main;
 
+import SplineGenerator.Util.DVector;
+
 import java.util.Objects;
 
 // Class for handleing all forms of vector2D math
@@ -195,5 +197,13 @@ public class  Vector2D implements Comparable{
     @Override
     public int compareTo(Object o) {
         return (int)(this.clone().scale(100).getMagnitude() - ((Vector2D) o).clone().scale(100).getMagnitude());
+    }
+
+    public DVector toDVector(){
+        return new DVector(x,y);
+    }
+
+    public static Vector2D getVector2DFromDVector(DVector v){
+        return new Vector2D(v.get(0), v.get(1));
     }
 }

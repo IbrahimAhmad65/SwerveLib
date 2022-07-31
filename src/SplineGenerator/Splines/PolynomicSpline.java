@@ -109,7 +109,6 @@ public class PolynomicSpline extends Spline {
 
         numTotalTerms = termsPerPiece * pieces;
         equationLength = numTotalTerms + 1;
-
         for (int n = 0; n < matrices.length; n++) {
             matrices[n] = new Matrix(numTotalTerms, equationLength);
         }
