@@ -116,6 +116,7 @@ public class SplineFollower {
         for (int j = 0; j < 1000; j++) {
             try {
                 pos.add(splineFollower.get(pos,.01,.25));
+                System.out.println( spline.get(j/10.0));
 //                System.out.println(splineFollower.get(pos,.01,.1).getMagnitude());
                 System.out.println(pos);
             }catch (Exception e){
