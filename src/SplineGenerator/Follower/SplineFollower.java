@@ -65,7 +65,7 @@ public class SplineFollower {
         Vector2D currentPos = spline.get(t).toVector2D();
         Vector2D newV = spline.get(t+splineRes).toVector2D();
         Vector2D v = newV.clone().subtract(currentPos).scale(1/.001);
-        return v.scale(forVel).add(newV.clone().subtract(pos).scale(-toVel));
+        return v.clone().scale(forVel).add(newV.clone().subtract(pos).scale(toVel)).setMagnitude(.2);
     }
 
     public static void main(String[] args) {
@@ -112,11 +112,16 @@ public class SplineFollower {
         spline.takeNextDerivative();
 
         SplineFollower splineFollower = new SplineFollower(spline,.1,.01,.001,w);
-        Vector2D pos = new Vector2D(0,0);
+        Vector2D pos = new Vector2D(5,0);
         for (int j = 0; j < 1000; j++) {
-            pos.add(splineFollower.get(pos,.01,-.1));
+            try {
+                pos.add(splineFollower.get(pos,.01,.25));
+//                System.out.println(splineFollower.get(pos,.01,.1).getMagnitude());
+                System.out.println(pos);
+            }catch (Exception e){
+//                System.out.println("hi my name is dora");
+            }
 //
-            System.out.println(pos);
 //            System.out.println( spline.get(j/126.0));
         }
 
