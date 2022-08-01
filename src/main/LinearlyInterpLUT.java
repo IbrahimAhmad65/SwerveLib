@@ -15,19 +15,22 @@ public class LinearlyInterpLUT {
 
 
     public double get(double in) {
-        if (pairs[pairs.length - 1] <= in) {
-            double b = (binarySearch(data, in));
-            int intb = (int)b;
-            double c = data[intb];
-            double diff = (in - c)/ (-data[intb - 1] + c);
-            double d = pairs[intb];
+        double b, c, diff,d;
+        int intb;
+        try {
+             b = (binarySearch(data, in));
+             intb = (int) b;
+             c = data[intb];
+             diff = (in - c) / (data[intb + 1] - c);
+             d = pairs[intb];
+        } catch(Exception e){
+             b = (binarySearch(data, in));
+             intb = (int)b;
+             c = data[intb];
+             diff = (in - c)/ (-data[intb - 1] + c);
+             d = pairs[intb];
             return d + diff * (-pairs[intb-1] + d);
         }
-        double b = (binarySearch(data, in));
-        int intb = (int)b;
-        double c = data[intb];
-        double diff = (in - c)/ (data[intb + 1] - c);
-        double d = pairs[intb];
         return d + diff * (pairs[intb+1] - d);
     }
 
@@ -56,8 +59,8 @@ public class LinearlyInterpLUT {
     }
 
     public static void main(String[] args) {
-        LinearlyInterpLUT bd = new LinearlyInterpLUT(new double[]{0, 1.6, 8, 54, 96}, new double[]{1, 2, 3, 4, 3});
-        double b = bd.get(138);
+        LinearlyInterpLUT bd = new LinearlyInterpLUT(new double[]{0,7,8}, new double[]{0,1,2});
+        double b = bd.get(3);
         System.out.println(b);
     }
 }

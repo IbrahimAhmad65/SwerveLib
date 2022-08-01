@@ -148,7 +148,7 @@ public class StepController implements Navigator {
 
             DPoint splinePos = spline.get(tValue);
             DVector distance = new DVector(position, splinePos);
-            DVector deriv = spline.evaluateDerivative(tValue, 1);
+            DVector deriv = spline.evaluateDerivative(tValue, 1); //TODO
 
             distance = stepController.modifyDistance(distance);
             deriv = stepController.modifyDerivative(deriv);
