@@ -73,6 +73,7 @@ public class Waypoints {
 //        System.out.println(t);
 
 //        System.out.println("tLut: " + tLut.get(t));
+//        System.out.println(t);
         return bSplineH.evaluatePos(tLut.get(t)).getY();
     }
 }
