@@ -64,8 +64,9 @@ public class PosEnhancedSplineFollower extends PosBasicSplineFollower implements
 
 
     public static void main(String[] args) {
-        Waypoints w = new Waypoints(new Waypoint(7, () -> {
-        }, .2), new Waypoint(0, () -> {
+        Waypoints w = new Waypoints(new Waypoint(2, () -> {
+        }, .4), new Waypoint(0, () -> {
+        }, .2), new Waypoint(4, () -> {
         }, .2));
 
 
