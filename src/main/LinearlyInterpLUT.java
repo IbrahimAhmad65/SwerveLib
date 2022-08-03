@@ -43,11 +43,9 @@ public class LinearlyInterpLUT {
             if (arr[start] < key) {
                 low = start;
                 start = (low + high) / 2;
-                System.out.println("Low: " + low + " High: " + high + " start: " + start);
             } else if (arr[start] > key) {
                 high = start;
                 start = (low + high) / 2;
-                System.out.println("Low: " + low + " High: " + high + " start: " + start);
             } else {
                 return start;
             }
@@ -60,7 +58,7 @@ public class LinearlyInterpLUT {
 
     public static void main(String[] args) {
         LinearlyInterpLUT bd = new LinearlyInterpLUT(new double[]{0,7,8}, new double[]{0,1,2});
-        double b = bd.get(3);
+        double b = bd.get(7.9);
         System.out.println(b);
     }
 }

@@ -34,13 +34,13 @@ public class Waypoints {
 
         }
         tLut = new LinearlyInterpLUT(tValues, tArr);
-        for (int i = 0; i < tValues.length; i++) {
-            System.out.print(tValues[i] + " ");
-        }
-        System.out.println();
-        for (int i = 0; i < tArr.length; i++) {
-            System.out.print(tArr[i] + " ");
-        }
+//        for (int i = 0; i < tValues.length; i++) {
+//            System.out.print(tValues[i] + " ");
+//        }
+//        System.out.println();
+//        for (int i = 0; i < tArr.length; i++) {
+//            System.out.print(tArr[i] + " ");
+//        }
         bSplineH = new BSplineH(.01, .01, splinePoints);
     }
 
@@ -70,9 +70,9 @@ public class Waypoints {
     }
 
     public double getSpeed(double t) {
-        System.out.println(t);
+//        System.out.println(t);
 
-        System.out.println("tLut: " + tLut.get(t));
+//        System.out.println("tLut: " + tLut.get(t));
         return bSplineH.evaluatePos(tLut.get(t)).getY();
     }
 }

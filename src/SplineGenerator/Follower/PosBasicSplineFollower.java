@@ -36,32 +36,39 @@ public class PosBasicSplineFollower implements Follower {
         t = this.findTOnSpline(pos);
         Vector2D currentPos = spline.get(t).toVector2D();
         Vector2D v = spline.evaluateDerivative(t, 1).toVector2D();
+//        System.out.println(v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(.2) + " super");
         return v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(.2);
     }
 
     public double findTOnSpline(Vector2D pos) {
-        Vector2D min = spline.get(t).toVector2D().subtract(pos);
-        Vector2D now = new Vector2D();
-        double newT = t;
+        Vector2D min = new Vector2D(99999,99999);
+        double newT = 0;
+        Vector2D check = new Vector2D();
         for (double i = t - splineR; i < t + splineR; i += splineRes) {
-            now.subtract(pos);
-            if (now.getMagnitude() < min.getMagnitude()) {
-                min = spline.get(i > 0 ? i : .001).toVector().toVector2D().subtract(pos);
-                newT = i;
+            double b = i > 0 ? i : .0001;
+            check = spline.get(b < spline.pieces ? b : spline.pieces - .0001).toVector2D().subtract(pos);
+            if(check.getMagnitude() < min.getMagnitude()){
+                min = check.clone();
+                newT = b < spline.pieces ? b : spline.pieces - .0001;
             }
         }
+        t = newT;
         return newT;
     }
 
     public Vector2D findPosOnSpline(Vector2D pos) {
-        Vector2D min = spline.get(t).toVector2D().subtract(pos);
-        Vector2D now = new Vector2D();
+        Vector2D min = new Vector2D(99999,99999);
+        Vector2D check = new Vector2D();
+        double newT = 0;
         for (double i = t - splineR; i < t + splineR; i += splineRes) {
-            now.subtract(pos);
-            if (now.getMagnitude() < min.getMagnitude()) {
-                min = spline.get(i > 0 ? i : .001).toVector().toVector2D().subtract(pos);
+            double b = i > 0 ? i : .0001;
+            check = spline.get(b < spline.pieces ? b : spline.pieces - .0001).toVector2D().subtract(pos);
+            if(check.getMagnitude() < min.getMagnitude()){
+                min = check.clone();
+                newT = b < spline.pieces ? b : spline.pieces - .0001;
             }
         }
+        t = newT;
         return min;
     }
 
@@ -110,15 +117,19 @@ public class PosBasicSplineFollower implements Follower {
         spline.generate();
         spline.takeNextDerivative();
 
-        PosBasicSplineFollower posBasicSplineFollower = new PosBasicSplineFollower(spline, .1, .01, .01, .25, w);
+        PosBasicSplineFollower posBasicSplineFollower = new PosBasicSplineFollower(spline, .1,
+                .01, .01, .02, w);
         Vector2D pos = new Vector2D(5, 0);
+//        posBasicSplineFollower.t = .99;
+//        System.out.println(posBasicSplineFollower.findTOnSpline(new Vector2D(1,1)));
         for (int j = 0; j < 1000; j++) {
             try {
                 pos.add(posBasicSplineFollower.get(pos));
+                System.out.println(pos);
             } catch (Exception e) {
             }
         }
-
+//
     }
 
 }
