@@ -6,10 +6,11 @@ import SplineGenerator.Util.DControlPoint;
 import SplineGenerator.Util.DDirection;
 import SplineGenerator.Util.DVector;
 import SplineGenerator.Util.InterpolationInfo;
+import main.Function;
 import main.Vector2D;
 
 public class PosBasicSplineFollower implements Follower {
-    protected Spline spline;
+    protected Followable spline;
     protected double t;
     protected Vector2D oldPos;
     protected double splineR;
@@ -19,7 +20,19 @@ public class PosBasicSplineFollower implements Follower {
     protected double forVel;
     protected double toVel;
 
-    public PosBasicSplineFollower(Spline spline, double splineR, double splineRes, double forVel, double toVel, Waypoints waypoints) {
+    public PosBasicSplineFollower(Followable spline, double splineR, double splineRes, double forVel, double toVel, Waypoints waypoints, Runnable run) {
+        run.run();
+        this.spline = spline;
+        t = 0;
+        this.splineR = splineR;
+        this.splineRes = splineRes;
+        oldPos = Vector2D.getVector2DFromDVector(spline.get(t).toVector());
+        this.waypoints = waypoints;
+        this.toVel = toVel;
+        this.forVel = forVel;
+    }
+
+    public PosBasicSplineFollower(Followable spline, double splineR, double splineRes, double forVel, double toVel, Waypoints waypoints) {
         this.spline = spline;
         t = 0;
         this.splineR = splineR;
@@ -46,10 +59,10 @@ public class PosBasicSplineFollower implements Follower {
         Vector2D check = new Vector2D();
         for (double i = t - splineR; i < t + splineR; i += splineRes) {
             double b = i > 0 ? i : .0001;
-            check = spline.get(b < spline.pieces ? b : spline.pieces - .0001).toVector2D().subtract(pos);
+            check = spline.get(b < spline.getNumPieces() ? b : spline.getNumPieces() - .0001).toVector2D().subtract(pos);
             if(check.getMagnitude() < min.getMagnitude()){
                 min = check.clone();
-                newT = b < spline.pieces ? b : spline.pieces - .0001;
+                newT = b < spline.getNumPieces() ? b : spline.getNumPieces() - .0001;
             }
         }
         t = newT;
@@ -62,10 +75,10 @@ public class PosBasicSplineFollower implements Follower {
         double newT = 0;
         for (double i = t - splineR; i < t + splineR; i += splineRes) {
             double b = i > 0 ? i : .0001;
-            check = spline.get(b < spline.pieces ? b : spline.pieces - .0001).toVector2D().subtract(pos);
+            check = spline.get(b < spline.getNumPieces() ? b : spline.getNumPieces() - .0001).toVector2D().subtract(pos);
             if(check.getMagnitude() < min.getMagnitude()){
                 min = check.clone();
-                newT = b < spline.pieces ? b : spline.pieces - .0001;
+                newT = b < spline.getNumPieces() ? b : spline.getNumPieces() - .0001;
             }
         }
         t = newT;
@@ -132,4 +145,7 @@ public class PosBasicSplineFollower implements Follower {
 //
     }
 
+    public Waypoints getWaypoints() {
+        return waypoints;
+    }
 }

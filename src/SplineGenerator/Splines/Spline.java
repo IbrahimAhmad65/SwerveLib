@@ -1,5 +1,6 @@
 package SplineGenerator.Splines;
 
+import SplineGenerator.Follower.Followable;
 import SplineGenerator.Util.*;
 
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.ArrayList;
 /**
  * An abstract class to hold methods and fields that may be used by one or more subclasses / subtypes of splines
  */
-public abstract class Spline {
+public abstract class Spline implements Followable {
 
     /**
      * An ArrayList<ControlPoint> for holding the ControlPoints the spline will be generated for

@@ -17,6 +17,9 @@ public class Waypoints {
 
     private LinearlyInterpLUT tLut;
 
+    private double tR = 0;
+
+
     public Waypoints(Waypoint... waypoints) {
         Arrays.sort(waypoints);
         this.waypoints = new ArrayList<Waypoint>(List.of(waypoints));
@@ -69,11 +72,36 @@ public class Waypoints {
         contruct();
     }
 
+    public Waypoints getRequiredPosWaypoints(){
+        ArrayList<Waypoint> w = new ArrayList<Waypoint>();
+        for (int i = 0; i < waypoints.size(); i++) {
+            if(waypoints.get(i).isRequiredPos()){
+                w.add(waypoints.get(i));
+            }
+        }
+        Waypoint[] waypointsO = new Waypoint[w.size()];
+        w.add(waypoints.get(0));
+        w.toArray(waypointsO);
+        return new Waypoints(waypointsO);
+    }
+
     public double getSpeed(double t) {
 //        System.out.println(t);
 
 //        System.out.println("tLut: " + tLut.get(t));
 //        System.out.println(t);
         return bSplineH.evaluatePos(tLut.get(t)).getY();
+    }
+
+    public void removeWaypoint(Waypoint w){
+        for (int i = 0; i < waypoints.size(); i++) {
+            if(w.equals(waypoints.get(i))){
+                waypoints.remove(i);
+            }
+        }
+    }
+
+    public ArrayList<Waypoint> getWaypoints() {
+        return waypoints;
     }
 }
