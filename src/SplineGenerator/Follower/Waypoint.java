@@ -40,7 +40,7 @@ public class Waypoint implements Comparable<Waypoint>{
     }
 
     public void run(double t){
-        if(this.t > t){
+        if(this.t > t && !hasRun){
             action.run();
             hasRun = true;
         }
