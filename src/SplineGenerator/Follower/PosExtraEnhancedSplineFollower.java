@@ -27,12 +27,9 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
             super.toVel = j;
             boolean exit = false;
             t = 0;
-            for (int k = 0; k < 1000 && !exit; k++) {
+            for (int k = 0; k < 1000 && !finished(); k++) {
                 pos.add(this.get(pos));
                 offSum += pos.clone().subtract(findPosOnSpline(pos)).getMagnitude();
-                if (findTOnSpline(pos) > spline.getNumPieces() - .001) {
-                    exit = true;
-                }
 //                System.out.println(offSum);
             }
             if (offSum < minOffSum) {
@@ -54,9 +51,9 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
         if (newT >= super.spline.getNumPieces() - .01) {
             return new Vector2D(0, 0);
         }
-        Vector2D baseVel = super.get(pos);
 
-        return baseVel.setMagnitude(waypoints.getSpeed(t));
+        Vector2D baseVel = super.get(pos);
+        return baseVel.setMagnitude(waypoints.getSpeed(newT));
     }
 
     public boolean finished() {
@@ -76,12 +73,33 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
     }
 
     public static void main(String[] args) {
-        Waypoints w = new Waypoints(new Waypoint(2, () -> {
-        }, .4), new Waypoint(0, () -> {
-        }, .2), new Waypoint(4, () -> {
-        }, .2,true), new Waypoint(6, () -> {
-        }, .2), new Waypoint(7, () -> {
-        }, .3));
+
+        //  2 //positions cannot be negative numbers but thats okay :)
+        //  3 ControlPoints
+        //  4 {
+        //  5 0,0,3,1
+        //  6 6,8,2,5
+        //  7 2,.01,2,5
+        //  8 }
+        //  9 WayPoints
+        // 10 {
+        // 11 1,2,.2,print
+        // 12 3,4.5,.3,print
+        // 13 2.5,5.5,.2,none
+        // 14 }
+        // 15 Required
+        // 16 {
+        // 17 1,2
+        // 18 }
+
+        //0.37000000000000016
+        //0.5500000000000003
+        //0.6100000000000003
+
+        Waypoints w = new Waypoints(new Waypoint(0.37000000000000016, () -> {
+        }, .4), new Waypoint(0.5500000000000003, () -> {
+        }, .2), new Waypoint(0.6100000000000003, () -> {
+        }, .2,true));
 
         Waypoints w2 = new Waypoints(new Waypoint(2, () -> {
         }, .4), new Waypoint(0, () -> {
@@ -93,18 +111,9 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
         PolynomicSpline spline = new PolynomicSpline(2);
         spline.setPolynomicOrder(5);
 
-        double i = 1;
-
-        // Define Path
-        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(1, 1), new DDirection(0, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(i, i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(2 * i, 0), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(i, -i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(-i, i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(-2 * i, 0), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(-i, -i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(0, 0), new DDirection(0, 0)));
+        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(3, 1), new DDirection(0, 0)));
+        spline.addControlPoint(new DControlPoint(new DVector(6, 8), new DDirection(2, 5)));
+        spline.addControlPoint(new DControlPoint(new DVector(2, .01), new DDirection(2, 5), new DDirection(0, 0)));
 
         spline.closed = false;
         InterpolationInfo c1 = new InterpolationInfo();
@@ -129,6 +138,13 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
         spline.generate();
         spline.takeNextDerivative();
 
+
+        System.out.println(findTOnSplineCool(new Vector2D(1,2),spline,.01));
+        System.out.println(findTOnSplineCool(new Vector2D(3,4),spline,.01));
+        System.out.println(findTOnSplineCool(new Vector2D(2.5,5.5),spline,.01));
+
+
+
         RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(.5)};
         PosExtraEnhancedSplineFollower posBasicSplineFollower = new PosExtraEnhancedSplineFollower(spline, .1
                 , .01, .5, .01, w, new RequiredFollowerPoints(.1,.01,r));
@@ -141,6 +157,22 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
             } catch (Exception e) {
             }
         }
+    }
+
+    public static double findTOnSplineCool(Vector2D pos, Spline spline, double splineRes) {
+        Vector2D min = new Vector2D(99999.0, 99999.0);
+        double newT = 0.0;
+        new Vector2D();
+
+        for (double i = 0; i < spline.getNumPieces(); i += splineRes) {
+            double b = i > 0.0 ? i : 1.0E-4;
+            Vector2D check = spline.get(b < (double) spline.getNumPieces() ? b : (double) spline.getNumPieces() - 1.0E-4).toVector2D().subtract(pos);
+            if (check.getMagnitude() < min.getMagnitude()) {
+                min = check.clone();
+                newT = b < (double) spline.getNumPieces() ? b : (double) spline.getNumPieces() - 1.0E-4;
+            }
+        }
+        return newT;
     }
 
 

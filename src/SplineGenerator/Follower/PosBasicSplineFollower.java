@@ -94,18 +94,29 @@ public class PosBasicSplineFollower implements Follower {
         PolynomicSpline spline = new PolynomicSpline(2);
         spline.setPolynomicOrder(5);
 
-        double i = 1;
+        //testAuto
+        //  2 //positions cannot be negative numbers but thats okay :)
+        //  3 ControlPoints
+        //  4 {
+        //  5 0,0,3,1
+        //  6 6,8,2,5
+        //  7 2,.01,2,5
+        //  8 }
+        //  9 WayPoints
+        // 10 {
+        // 11 1,2,.2,print
+        // 12 3,4.5,.3,print
+        // 13 2.5,5.5,.2,none
+        // 14 }
+        // 15 Required
+        // 16 {
+        // 17 1,2
+        // 18 }
+        //~
 
-        // Define Path
-        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(1, 1), new DDirection(0, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(i, i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(2 * i, 0), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(i, -i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(-i, i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(-2 * i, 0), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(-i, -i), new DDirection(1, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(0, 0), new DDirection(0, 0)));
+        spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(3, 1), new DDirection(0, 0)));
+        spline.addControlPoint(new DControlPoint(new DVector(6, 8), new DDirection(2, 5)));
+        spline.addControlPoint(new DControlPoint(new DVector(2, .01), new DDirection(2, 5), new DDirection(0, 0)));
 
         spline.closed = false;
         InterpolationInfo c1 = new InterpolationInfo();
