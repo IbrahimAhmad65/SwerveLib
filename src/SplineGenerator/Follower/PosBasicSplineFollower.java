@@ -46,8 +46,7 @@ public class PosBasicSplineFollower implements Follower {
 
     // tangent addition method
     public Vector2D get(Vector2D pos) {
-        t = this.findTOnSpline(pos);
-        Vector2D currentPos = spline.get(t).toVector2D();
+        Vector2D currentPos = findPosOnSpline(pos);
         Vector2D v = spline.evaluateDerivative(t, 1).toVector2D();
 //        System.out.println(v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(.2) + " super");
         return v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(.2);
