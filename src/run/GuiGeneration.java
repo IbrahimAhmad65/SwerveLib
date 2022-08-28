@@ -19,7 +19,8 @@ public class GuiGeneration {
     public static void main(String[] args) {
         ArrayList<String[]> input = new ArrayList<String[]>();
         try {
-            File myObj = new File("C:\\Users\\galaly\\robotics\\splineUtil\\in.txt");
+            File myObj = new File(args[0]);
+
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -34,11 +35,11 @@ public class GuiGeneration {
         for (int i = 0; i < input.size(); i++) {
             if(i == 0 || i == input.size() - 1){
                 DVector v1 = new DVector(Double.parseDouble(input.get(i)[0]),Double.parseDouble(input.get(i)[1]));
-                DVector v2 = new DVector(Double.parseDouble("1"),Double.parseDouble("2"));
+                DVector v2 = new DVector(Double.parseDouble(input.get(i)[2]),Double.parseDouble(input.get(i)[3]));
                 arr[i] = new DControlPoint(v1,v2, new DVector(0,0));
             } else{
                 DVector v1 = new DVector(Double.parseDouble(input.get(i)[0]),Double.parseDouble(input.get(i)[1]));
-                DVector v2 = new DVector(Double.parseDouble("1"),Double.parseDouble("2"));
+                DVector v2 = new DVector(Double.parseDouble(input.get(i)[2]),Double.parseDouble(input.get(i)[3]));
                 arr[i] = new DControlPoint(v1,v2);
             }
         }
@@ -79,7 +80,7 @@ public class GuiGeneration {
 
 
             try {
-                FileWriter myWriter = new FileWriter("C:\\Users\\galaly\\robotics\\splineUtil\\out.txt");
+                FileWriter myWriter = new FileWriter(args[1]);
                 for (double i = 0; i < input.size() - 1; i+= .05) {
                     myWriter.write(spline.get(i).get(0) + ","+ spline.get(i).get(1) +"\n");
                 }

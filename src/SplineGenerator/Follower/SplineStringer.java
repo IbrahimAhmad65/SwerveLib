@@ -114,7 +114,7 @@ public class SplineStringer implements Followable{
         }, .2), new Waypoint(7, () -> {
         }, .3));
 
-        RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(.5)};
+        RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(.5,0)};
         PosExtraEnhancedSplineFollower posBasicSplineFollower = new PosExtraEnhancedSplineFollower(splineStringer, .1
                 , .01, .5, .01, w, new RequiredFollowerPoints(.1,.01,r));
 

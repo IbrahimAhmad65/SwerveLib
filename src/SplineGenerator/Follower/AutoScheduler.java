@@ -47,6 +47,8 @@ public class AutoScheduler {
         return registry.get(currentAuto).getFollower().get(posSupplier.get());
     }
 
+    public double getSpin(){return registry.get(currentAuto).getFollower().getSpin(posSupplier.get());}
+
     public void runWaypoints(){
         Follower follower = registry.get(currentAuto).getFollower();
         double t = follower.findTOnSpline(posSupplier.get());
@@ -97,7 +99,7 @@ public class AutoScheduler {
         }, .2), new Waypoint(7, () -> {
         }, .3));
 
-        RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(.5)};
+        RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(.5,0)};
         PosExtraEnhancedSplineFollower posBasicSplineFollower = new PosExtraEnhancedSplineFollower(spline, .1
                 , .01, .5, .01, w, new RequiredFollowerPoints(.1,.01,r));
 

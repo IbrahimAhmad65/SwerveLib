@@ -15,7 +15,7 @@ jar cmvf0 META-INF/MANIFEST.MF ../SwerveLib.jar $(find . -name '*.class') > garb
 #jar umvf0 META-INF/MANIFEST.MF2 ../SwerveLib.jar ./SplineGenerator/Applied/*.class > garboFile
 #jar umvf0 META-INF/MANIFEST.MF2 ../SwerveLib.jar ./SplineGenerator/Splines/*.class > garboFile
 #jar umvf0 META-INF/MANIFEST.MF2 ../SwerveLib.jar ./SplineGenerator/Splines/*.class > garboFile
-java -jar ../SwerveLib.jar
+java -jar ../SwerveLib.jar /home/ibrahim/in.txt /home/ibrahim/out.txt
 rm garboFile
 rm -f ./SplineGenerator/Applied/*.class
 rm -f ./SplineGenerator/Applied/LegacyVersions/*.class

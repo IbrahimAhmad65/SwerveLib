@@ -158,4 +158,9 @@ public class PosBasicSplineFollower implements Follower {
     public Waypoints getWaypoints() {
         return waypoints;
     }
+
+    @Override
+    public double getSpin(Vector2D pos) {
+        return 0;
+    }
 }

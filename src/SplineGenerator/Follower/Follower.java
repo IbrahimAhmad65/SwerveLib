@@ -9,4 +9,6 @@ public interface Follower {
     public double findTOnSpline(Vector2D pos);
 
     public Waypoints getWaypoints();
+
+    public double getSpin(Vector2D pos);
 }

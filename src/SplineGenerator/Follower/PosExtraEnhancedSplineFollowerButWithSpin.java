@@ -1,16 +1,21 @@
+
 package SplineGenerator.Follower;
 
-import SplineGenerator.Splines.PolynomicSpline;
-import SplineGenerator.Splines.Spline;
-import SplineGenerator.Util.DControlPoint;
-import SplineGenerator.Util.DDirection;
-import SplineGenerator.Util.DVector;
-import SplineGenerator.Util.InterpolationInfo;
-import main.Vector2D;
+        import BSpline.BSplineH;
+        import BSpline.SplinePoint;
+        import SplineGenerator.Splines.PolynomicSpline;
+        import SplineGenerator.Splines.Spline;
+        import SplineGenerator.Util.DControlPoint;
+        import SplineGenerator.Util.DDirection;
+        import SplineGenerator.Util.DVector;
+        import SplineGenerator.Util.InterpolationInfo;
+        import main.Vector2D;
 
-public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
+
+public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFollower {
     private RequiredFollowerPoints requiredFollowerPoints;
-    public PosExtraEnhancedSplineFollower(Followable spline, double splineR, double splineRes,
+    private BSplineH angleSpline;
+    public PosExtraEnhancedSplineFollowerButWithSpin(Followable spline, double splineR, double splineRes,
                                           double maxToVel, double toVelSearchRadius, Waypoints waypoints, RequiredFollowerPoints r) {
         super(spline, splineR, splineRes, maxToVel, toVelSearchRadius, waypoints);
         this.requiredFollowerPoints = r;
@@ -41,7 +46,13 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
         System.out.println("toVel " + toVel);
         System.out.println("forVel " + forVel);
         t = 0;
-
+        SplinePoint[] splinePoints =new SplinePoint[requiredFollowerPoints.getRequiredFollowerPoints().length];
+        double[] arr = requiredFollowerPoints.getAnglesOrdered();
+        double[] arr2 = requiredFollowerPoints.getTOrdered();
+        for (int i = 0; i < splinePoints.length; i++) {
+            splinePoints[i] = new SplinePoint(new Vector2D(arr2[i],arr[i]), new Vector2D(1,0));
+        }
+        angleSpline = new BSplineH(.1,.1,splinePoints);
     }
 
     public Vector2D superget(Vector2D pos) {
@@ -70,6 +81,11 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
             return v.subtract(pos).setMagnitude(waypoints.getSpeed(tempT));
         }
         return superget(pos);
+    }
+
+    public double getSpin(Vector2D pos){
+        double tempT = findTOnSpline(pos);
+        return angleSpline.evaluatePos(tempT).getY();
     }
 
     public static void main(String[] args) {
