@@ -99,19 +99,21 @@ public class AutoScheduler {
         }, .2), new Waypoint(7, () -> {
         }, .3));
 
-        RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(.5,0)};
-        PosExtraEnhancedSplineFollower posBasicSplineFollower = new PosExtraEnhancedSplineFollower(spline, .1
+        Vector2D pos = new Vector2D();
+
+        RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(0,1),new RequiredFollowerPoint(9,3)};
+        PosExtraEnhancedSplineFollowerButWithSpin posBasicSplineFollower = new PosExtraEnhancedSplineFollowerButWithSpin(spline, .1
                 , .01, .5, .01, w, new RequiredFollowerPoints(.1,.01,r));
-
-//        Vector2D pos = new Vector2D(5, 0);
-//        for (int j = 0; j < 1000 && !posBasicSplineFollower.finished(); j++) {
-//            try {
-//                pos.add(posBasicSplineFollower.get(pos));
-//                System.out.println(pos);
-//            } catch (Exception e) {
-//            }
-//        }
         SingleAuto singleAuto = new SingleAuto("cat",spline,posBasicSplineFollower);
-
+        AutoRegistry autoRegistry = new AutoRegistry();
+        autoRegistry.addAuto(singleAuto.getAutoName(), singleAuto);
+        AutoScheduler autoScheduler = new AutoScheduler(autoRegistry, pos::clone);
+        autoScheduler.setCurrentAuto(singleAuto.getAutoName());
+        Vector2D spin = new Vector2D();
+        for (int j = 0; j < 1000; j++) {
+            pos.add(autoScheduler.getVelocity());
+            spin.setX(autoScheduler.getSpin());
+            System.out.println("(" + spin.getX() + "," + j +")");
+        }
     }
 }

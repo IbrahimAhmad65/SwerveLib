@@ -51,6 +51,7 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         double[] arr2 = requiredFollowerPoints.getTOrdered();
         for (int i = 0; i < splinePoints.length; i++) {
             splinePoints[i] = new SplinePoint(new Vector2D(arr2[i],arr[i]), new Vector2D(1,0));
+            System.out.println(new Vector2D(arr2[i],arr[i]) + " " +  new Vector2D(1,0));
         }
         angleSpline = new BSplineH(.1,.1,splinePoints);
     }
