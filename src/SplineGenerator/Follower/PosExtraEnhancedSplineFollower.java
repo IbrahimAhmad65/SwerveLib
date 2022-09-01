@@ -96,7 +96,7 @@ public class PosExtraEnhancedSplineFollower extends PosBasicSplineFollower{
         //0.5500000000000003
         //0.6100000000000003
 
-        Waypoints w = new Waypoints(new Waypoint(0.37000000000000016, () -> {
+        Waypoints w = new Waypoints(new Waypoint(0, () -> {
         }, .4), new Waypoint(0.5500000000000003, () -> {
         }, .2), new Waypoint(0.6100000000000003, () -> {
         }, .2,true));
