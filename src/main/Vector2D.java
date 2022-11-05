@@ -8,8 +8,8 @@ import java.util.Objects;
 public class  Vector2D implements Comparable{
 
     // Data in this class is stored in cartesian coordinates
-    private double x;
-    private double y;
+    protected double x;
+    protected double y;
 
     // Nothing gets passed into constructor
     public Vector2D() {

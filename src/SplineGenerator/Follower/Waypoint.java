@@ -46,6 +46,10 @@ public class Waypoint implements Comparable<Waypoint>{
         }
     }
 
+    public void setHasRun(boolean hasRun) {
+        this.hasRun = hasRun;
+    }
+
     public boolean hasRun() {
         return hasRun;
     }

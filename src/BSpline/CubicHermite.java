@@ -34,7 +34,8 @@ public class CubicHermite {
             y2S = x2;
             tan1S = 1.0/tan1;
             tan2S = 1.0/tan2;
-            if(tan1S == Double.POSITIVE_INFINITY ||tan1S == Double.NEGATIVE_INFINITY || tan2S == Double.POSITIVE_INFINITY ||tan2S == Double.NEGATIVE_INFINITY){
+            if(tan1S == Double.POSITIVE_INFINITY ||tan1S == Double.NEGATIVE_INFINITY || tan2S == Double.POSITIVE_INFINITY || tan2S == Double.NEGATIVE_INFINITY){
+                System.out.println("tan1 " + tan1 + " tan2 " +tan2);
                 throw new IllegalArgumentException("your numbers are bad lol");
             }
             flip = true;
@@ -47,10 +48,11 @@ public class CubicHermite {
         double finalX2S = x2S;
         boolean finalFlip = flip;
         return (x) -> {
+            double v = four * (x - finalX2S) * (x - finalX1S) * (x - finalX1S);
             if (finalFlip){
-                return new Vector2D(one[0] + two[0] * (x - finalX1S) + three[0] * (x - finalX1S) * (x - finalX1S) + four * (x - finalX2S) * (x - finalX1S) * (x - finalX1S),x);
+                return new Vector2D(one[0] + two[0] * (x - finalX1S) + three[0] * (x - finalX1S) * (x - finalX1S) + v,x);
             }
-            return new Vector2D(x,one[0] + two[0] * (x - finalX1S) + three[0] * (x - finalX1S) * (x - finalX1S) + four * (x - finalX2S) * (x - finalX1S) * (x - finalX1S));
+            return new Vector2D(x,one[0] + two[0] * (x - finalX1S) + three[0] * (x - finalX1S) * (x - finalX1S) + v);
         };
     }
 
@@ -70,6 +72,7 @@ public class CubicHermite {
             tan1S = 1.0/tan1;
             tan2S = 1.0/tan2;
             if(tan1S == Double.POSITIVE_INFINITY ||tan1S == Double.NEGATIVE_INFINITY || tan2S == Double.POSITIVE_INFINITY ||tan2S == Double.NEGATIVE_INFINITY){
+                System.out.println("tan1 " + tan1 + " tan2 " +tan2);
                 throw new IllegalArgumentException("your numbers are bad lol");
             }
             flip = true;
@@ -137,6 +140,7 @@ public class CubicHermite {
             tan1S = 1.0/tan1;
             tan2S = 1.0/tan2;
             if(tan1S == Double.POSITIVE_INFINITY ||tan1S == Double.NEGATIVE_INFINITY || tan2S == Double.POSITIVE_INFINITY ||tan2S == Double.NEGATIVE_INFINITY){
+                System.out.println("tan1 " + tan1 + " tan2 " +tan2);
                 throw new IllegalArgumentException("your numbers are bad lol");
             }
             flip = true;

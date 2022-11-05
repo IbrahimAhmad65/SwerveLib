@@ -1,16 +1,16 @@
 
 package SplineGenerator.Follower;
 
-        import BSpline.BSplineH;
-        import BSpline.SplinePoint;
-        import SplineGenerator.Splines.PolynomicSpline;
-        import SplineGenerator.Splines.Spline;
-        import SplineGenerator.Util.DControlPoint;
-        import SplineGenerator.Util.DDirection;
-        import SplineGenerator.Util.DVector;
-        import SplineGenerator.Util.InterpolationInfo;
-        import main.LinearlyInterpLUT;
-        import main.Vector2D;
+import BSpline.BSplineH;
+import BSpline.SplinePoint;
+import SplineGenerator.Splines.PolynomicSpline;
+import SplineGenerator.Splines.Spline;
+import SplineGenerator.Util.DControlPoint;
+import SplineGenerator.Util.DDirection;
+import SplineGenerator.Util.DVector;
+import SplineGenerator.Util.InterpolationInfo;
+import main.LinearlyInterpLUT;
+import main.Vector2D;
 
 
 public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFollower {
@@ -45,8 +45,6 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
             }
         }
         super.toVel = tToVel;
-        System.out.println("toVel " + toVel);
-        System.out.println("forVel " + forVel);
         t = 0;
         SplinePoint[] splinePoints =new SplinePoint[requiredFollowerPoints.getRequiredFollowerPoints().length];
         double[] arr = requiredFollowerPoints.getAnglesOrdered();
@@ -54,7 +52,6 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         double[] indexArr = new double[splinePoints.length];
         for (int i = 0; i < splinePoints.length; i++) {
             splinePoints[i] = new SplinePoint(new Vector2D(arr2[i],arr[i]), new Vector2D(1,0));
-            System.out.println(new Vector2D(arr2[i],arr[i]) + " " +  new Vector2D(1,0));
             indexArr[i] = i;
         }
         angleTLut = new LinearlyInterpLUT(arr2,indexArr);
@@ -91,6 +88,9 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
 
     public double getSpin(Vector2D pos){
         double tempT = findTOnSpline(pos);
+        if(Math.random() > .95){
+            System.out.println(tSpinMap(tempT));
+        }
         return angleSpline.evaluatePos(tSpinMap(tempT)).getY();
 //        return 0;
     }
@@ -139,15 +139,13 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         spline.setPolynomicOrder(5);
         byte i = 1;
 
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0.0, 0.0}), new DDirection(new double[]{1.0, 1.0}), new DDirection(new double[]{0.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{i, i}), new DDirection(new double[]{1.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{2.0 * i, 0.0}), new DDirection(new double[]{1.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{i, -i}), new DDirection(new double[]{1.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0.0, 0.0}), new DDirection(new double[]{1.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-i, i}), new DDirection(new double[]{1.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.0 * i, 0.0}), new DDirection(new double[]{1.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-i, -i}), new DDirection(new double[]{1.0, 0.0})}));
-        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0.0, 0.0}), new DDirection(new double[]{0.0, 0.0}), new DDirection(new double[]{0.0, 0.0})}));
+        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0,0}), new DDirection(new double[]{0, -1}), new DDirection(new double[]{0.0, 0.0})}));
+        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0, -1.2}), new DDirection(new double[]{-.1, -1})}));
+        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.54,-1.2}), new DDirection(new double[]{1, 0}), new DDirection(new double[]{0.0, 0.0})}));
+//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.117,.59}), new DDirection(new double[]{-1, 0})}));
+//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-3.275, 2.02})}));
+//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-3.275,2.3}), new DDirection(new double[]{0, .1})}));
+
 
         spline.closed = false;
         InterpolationInfo c1 = new InterpolationInfo();
@@ -177,16 +175,20 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         PosExtraEnhancedSplineFollowerButWithSpin posBasicSplineFollower = new PosExtraEnhancedSplineFollowerButWithSpin(spline, .1
                 , .01, .5, .01, w, new RequiredFollowerPoints(.1,.01,r));
 
-        Vector2D pos = new Vector2D(0, 0);
+        Vector2D pos = posBasicSplineFollower.spline.get(0).toVector2D();
         for (int j = 0; j < 1000 && !posBasicSplineFollower.finished(); j++) {
             try {
-                pos.add(posBasicSplineFollower.get(pos));
+//                System.out.println(j+ "," + posBasicSplineFollower.getSpin(pos));
                 System.out.println(pos);
-                System.out.println("(" +j+ "," + posBasicSplineFollower.getSpin(pos)+")");
+                pos.add(posBasicSplineFollower.get(pos).scale(.1));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        Vector2D a = new Vector2D(-2.117,.59);
+        System.out.println(a.addTheta(Math.PI/2));
+        a.setXY(-3.275,2.3);
+        System.out.println(a.addTheta(Math.PI/2));
     }
 
     public static double findTOnSplineCool(Vector2D pos, Spline spline, double splineRes) {

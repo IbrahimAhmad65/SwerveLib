@@ -172,46 +172,61 @@ public class DiffEq {
     }
 
 
+    static void printBinary(int[] binary, int id)
+    {
+        // Iteration over array
+        for (int i = id - 1; i >= 0; i--){
+            System.out.print(binary[i] + "");}
+    }
+
+    // Function converting decimal to binary
+    public static void decimalToBinary(int num)
+    {
+        // Creating and assigning binary array size
+        int[] binary = new int[35];
+        int id = 0;
+
+        // Number should be positive
+        while (num > 0) {
+            binary[id++] = num % 2;
+            num = num / 2;
+        }
+
+        // Print Binary
+        printBinary(binary, id);
+    }
+
     public static void main(String[] args) {
+
+        if (false) {
+            float f = 1.7e3f;
+
+            int j = (Float.floatToRawIntBits(f));
+            System.out.println(Integer.toBinaryString(j));
+            j =  j << 1;
+            j = j >> 1;
+
+            System.out.println(Integer.toBinaryString(j));
+
+
+            f = Float.intBitsToFloat(j);
+            System.out.println(f);
+            return;
+        }
+
+
         double g = 9.81;
         double radius = .33;
         double airDensity = 1.225;
-//        }
-        double s = 4.0/3 * radius * radius *radius * Math.PI * airDensity/.27 * 0;
+
+        double s = 4.0 / 3 * radius * radius * radius * Math.PI * airDensity / .27 * 0;
         double cd = .47;
-        double mu = .5 * airDensity * cd * Math.PI * radius * radius/.27;
-//        double s = 0;
-        //        System.out.println(mu);
-//        System.out.println(s);
+        double mu = .5 * airDensity * cd * Math.PI * radius * radius / .27;
 
-//        System.out.println("y>=2.62");
-//        System.out.println("x=2");
-
-
-//        System.out.println("(2.4026,2.2999)");
-//        for (int j = 0; j < 400; j++) {
-//
-//            double[] b = DiffEq.rk4System4((t,x, y, vx, vy) -> {
-//                return vx;
-//            },(t,x, y, vx, vy) -> {
-//                return vy;
-//            }, (t,x, y, vx, vy) -> {
-//                Vector3D vitr = new Vector3D(vx, vy, 0);
-//                double sqrt = Math.sqrt(vx * vx + vy * vy);
-//                Vector3D omegaV = new Vector3D(0, 0, omega);
-//                return -(mu * vx * sqrt - s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega)) / vx;
-//            }, (t,x, y, vx, vy) -> {
-//                Vector3D vitr = new Vector3D(vx,vy, 0);
-//                double sqrt = Math.sqrt(vx * vx + vy * vy);
-//                Vector3D omegaV = new Vector3D(0, 0, omega);
-//                return -( g+ mu * vy * sqrt - s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega)) / vx;
-//            }, 55, 2, 2.5, j*.01, 2, 3,-3);
-//            System.out.println("(" + (b[0]) + "," + b[1] + ")");
-//        }
 
         int xCheck;
-        for (int j = 0; j < 100; j++) {
-            double omega = 3;
+        for (int j = 0; j < 1000; j++) {
+            double omega = .0000001;
 
             int finalJ = j;
             xCheck = 0;
@@ -219,37 +234,15 @@ public class DiffEq {
             double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
                 return vy / vx;
             }, (x, y, vx, vy) -> {
-                Vector3D vitr = new Vector3D(0, vx, 0);
                 double sqrt = Math.sqrt(vx * vx + vy * vy);
-                Vector3D omegaV = new Vector3D(0, 0, omega);
-//                finalXCheck.getAndIncrement();
-//                if(finalXCheck.get() == 10)
-//                System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getI()).getRadius() * omega / Math.abs(omega) + ")");
-                return (-mu * vx * sqrt + s * vitr.crossProduct(omegaV).getRadius() * omega / Math.abs(omega)) / vx;
+                return (-mu * vx * sqrt + s) / vx;
             }, (x, y, vx, vy) -> {
-                Vector3D vitr = new Vector3D(vy  ,0, 0);
                 double sqrt = Math.sqrt(vx * vx + vy * vy);
-                Vector3D omegaV = new Vector3D(0, 0, omega);
-//                if(finalXCheck.get() == 10)
-//                    System.out.println("(" + (finalJ *.04) + "," + s * vitr.crossProduct(omegaV).project(Vector3D.getJ()).getRadius() * omega / Math.abs(omega) + ")");
-                return ( -g -  mu * vy * sqrt + s * vitr.crossProduct(omegaV).getRadius() * omega / Math.abs(omega)) / vx;
-            }, 55, 2, 2.5, j*.01, 2, -3 );
-            System.out.println("(" + (j*.01) + "," + b[0] + ")");
-            System.out.println("(" + (j*.01) + "," + b[2] + ")");
-            System.out.println("(" + (j*.01) + "," + b[1] + ")");
-
-            //            System.out.println("polygon( " + "(" + (j*.01) + "," + b[0] + "),(" + (b[1]) + "," + b[2] + "))" );
-//            System.out.println("\\operatorname{polygon}\\left(\\left(" +(j*.01) +","+b[0] +"+\\right),\\left(" +b[1] +","+b[2] +"\\right)\\right)");
+                return (-g - mu * vy * sqrt + s) / vx;
+            }, 55, 2, 2.5, j * .01, 2, -3);
+            System.out.println("(" + (j * .01) + "," + b[0] + ")");
+//            System.out.println("(" + (j * .01) + "," + b[2] + ")");
+//            System.out.println("(" + (j * .01) + "," + b[1] + ")");
         }
-
-
-//        fmore
-//        double[] b = DiffEq.rk4System3((x, y, vx, vy) -> {
-//            return vy / vx;
-//        }, (x, y, vx, vy) -> {
-//            return (-mu * vx * Math.sqrt(vx * vx + vy * vy)) / vx;
-//        }, (x, y, vx, vy) -> {
-//            return (-g - mu * vy * Math.sqrt(vx * vx + vy * vy)) / vx;
-//        }, 55,2.4026 , 2.2999, j*.03, 2, -3);
- }
+    }
 }

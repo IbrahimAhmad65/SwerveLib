@@ -22,8 +22,6 @@ public class BSplineH {
             double tan1 = splinePoints[i].getVelocity().getY() / splinePoints[i].getVelocity().getX();
             double tan2 = splinePoints[i + 1].getVelocity().getY() / splinePoints[i + 1].getVelocity().getX();
             equations[i] = CubicHermite.computeInterpParametric(x1, x2, y1, y2, tan1, tan2);
-            System.out.println(CubicHermite.getDesmosEquations(x1, x2, y1, y2, tan1, tan2, "t"));
-            System.out.println();
         }
         this.t = splineR;
     }

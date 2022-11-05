@@ -1,5 +1,6 @@
-package SplineGenerator.Follower;
+package SplineGenerator.Follower.sim;
 
+import SplineGenerator.Follower.AutoScheduler;
 import main.Vector2D;
 
 public class FullSimulator {
@@ -16,5 +17,7 @@ public class FullSimulator {
             System.out.println(pos);
         }
     }
+
+
 
 }
