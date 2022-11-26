@@ -11,11 +11,11 @@ import main.Vector2D;
 
 /**
  * Class that contains multiple followable objects, and connects them back to back,
- * then end of one spline's position must be the beginning of the next one.
- * It is recommended to have the end of one spline, and the beginning of another have the same derivative for smoothness,
+ * the end of one spline's position must be the beginning of the next one.
+ * It is recommended to have the end of one spline, and the beginning of another have the same derivatives for smoothness,
  * but is not required for this class to function
  *
- * Is a followable object, and thus may be passed to the spline follower classes
+ * This is a followable object, and thus may be passed to the spline follower classes
  * */
 public class SplineStringer implements Followable {
     // The array Of Splines

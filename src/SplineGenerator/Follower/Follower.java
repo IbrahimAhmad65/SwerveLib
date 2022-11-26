@@ -18,7 +18,7 @@ public interface Follower {
     public Waypoints getWaypoints();
 
     // Returns the intended angle of the robot provided the given position, should be provided with the same position as get(Vector2D pos)
-    public default double getSpin(Vector2D pos){
+    public default double getSpin(Vector2D pos) {
         return 0;
     }
 

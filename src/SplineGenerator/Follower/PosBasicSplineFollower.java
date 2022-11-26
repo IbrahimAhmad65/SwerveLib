@@ -51,7 +51,7 @@ public class PosBasicSplineFollower implements Follower {
     public Vector2D get(Vector2D pos) {
         Vector2D currentPos = findPosOnSpline(pos);
         Vector2D v = spline.evaluateDerivative(t, 1).toVector2D();
-        return v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(.2);
+        return v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(1);
     }
 
 
