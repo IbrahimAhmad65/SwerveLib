@@ -10,45 +10,53 @@ import main.Vector2D;
 
 import java.lang.reflect.Array;
 import java.util.function.Supplier;
-
+// Class for executing an auto
 public class AutoScheduler {
+    // Registry
     private AutoRegistry registry;
+    // Current Selected Auto
     private String currentAuto = "";
+    // Supplier for the position of the robot
     private Supplier<Vector2D> posSupplier;
     public AutoScheduler(AutoRegistry registry, Supplier<Vector2D> posSupplier){
         this.registry = registry;
         this.posSupplier = posSupplier;
     }
 
+    // Sets the position supplier
     public void setPosSupplier(Supplier<Vector2D> posSupplier) {
         this.posSupplier = posSupplier;
     }
 
+    // Declares whether the auto has been completed or not
     public boolean isFinished(){
-        if(getRegistry().get(currentAuto).getFollower().getClass() == PosExtraEnhancedSplineFollower.class){
-            return ((PosExtraEnhancedSplineFollower)getRegistry().get(currentAuto).getFollower()).finished();
-        }
-        return false;
+        return registry.get(currentAuto).getFollower().finished();
     }
 
+    // Sets the registry
     public void setRegistry(AutoRegistry registry){
         this.registry = registry;
     }
 
+    // Sets the name of the current selected auto
     public void setCurrentAuto(String name){
         currentAuto = name;
     }
 
+    //Returns the autoRegistry
     public AutoRegistry getRegistry() {
         return registry;
     }
 
+    // Returns the velocity of the selected auto's follower
     public Vector2D getVelocity(){
         return registry.get(currentAuto).getFollower().get(posSupplier.get());
     }
 
+    // Returns the angle from the selected auto's follower
     public double getSpin(){return registry.get(currentAuto).getFollower().getSpin(posSupplier.get());}
 
+    // Executes the waypoints
     public void runWaypoints(){
         Follower follower = registry.get(currentAuto).getFollower();
         double t = follower.findTOnSpline(posSupplier.get());
@@ -59,6 +67,7 @@ public class AutoScheduler {
         }
     }
 
+    // Tester Code
     public static void main(String[] args) {
         PolynomicSpline spline = new PolynomicSpline(2);
         spline.setPolynomicOrder(5);

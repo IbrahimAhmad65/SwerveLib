@@ -1,11 +1,16 @@
 package SplineGenerator.Follower;
 
+/**
+ * A class that contains an auto, it's name, it's follower,
+ * **/
 public class SingleAuto {
-
+    // Follower for the auto
     private Follower follower;
+    // Spline for the Auto
     private Followable spline;
+    // Name of Auto
     private String autoName;
-    private double autoStartingOffset = 0;
+
     public SingleAuto(String autoName,Followable spline, Follower follower){
         this.follower = follower;
         this.spline = spline;
@@ -15,15 +20,10 @@ public class SingleAuto {
         this.follower = follower;
         this.spline = spline;
         this.autoName = autoName;
-        this.autoStartingOffset = autoStartingOffset;
     }
 
     public Followable getSpline() {
         return spline;
-    }
-
-    public double getAutoStartingOffset() {
-        return autoStartingOffset;
     }
 
     public Follower getFollower() {

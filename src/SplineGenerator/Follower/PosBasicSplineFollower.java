@@ -9,6 +9,7 @@ import SplineGenerator.Util.InterpolationInfo;
 import main.Function;
 import main.Vector2D;
 
+// Superclass Of Spline Follower Classes
 public class PosBasicSplineFollower implements Follower {
     protected Followable spline;
     protected double t;
@@ -44,14 +45,19 @@ public class PosBasicSplineFollower implements Follower {
     }
 
 
-    // tangent addition method
+    /**
+     * Gets the desired velocity of the follower given the current position
+     * */
     public Vector2D get(Vector2D pos) {
         Vector2D currentPos = findPosOnSpline(pos);
         Vector2D v = spline.evaluateDerivative(t, 1).toVector2D();
-//        System.out.println(v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(.2) + " super");
         return v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(.2);
     }
 
+
+    /**
+     * Finds the nearest t on the spline given a position
+     **/
     public double findTOnSpline(Vector2D pos) {
         Vector2D min = new Vector2D(99999,99999);
         double newT = 0;
@@ -68,6 +74,9 @@ public class PosBasicSplineFollower implements Follower {
         return newT;
     }
 
+    /**
+     * Finds the nearest position on the spline given a position
+     **/
     public Vector2D findPosOnSpline(Vector2D pos) {
         Vector2D min = new Vector2D(99999,99999);
         Vector2D check = new Vector2D();
@@ -84,6 +93,17 @@ public class PosBasicSplineFollower implements Follower {
         return min;
     }
 
+    public boolean finished() {
+        return t >= spline.getNumPieces() - .01;
+    }
+    /**
+     * Returns the waypoints that have been associated with this follower
+     * **/
+    public Waypoints getWaypoints() {
+        return waypoints;
+    }
+
+    // Tester code to check whether this class actually works
     public static void main(String[] args) {
         Waypoints w = new Waypoints(new Waypoint(8, () -> {
         }, 2), new Waypoint(0, () -> {
@@ -92,26 +112,6 @@ public class PosBasicSplineFollower implements Follower {
 
         PolynomicSpline spline = new PolynomicSpline(2);
         spline.setPolynomicOrder(5);
-
-        //testAuto
-        //  2 //positions cannot be negative numbers but thats okay :)
-        //  3 ControlPoints
-        //  4 {
-        //  5 0,0,3,1
-        //  6 6,8,2,5
-        //  7 2,.01,2,5
-        //  8 }
-        //  9 WayPoints
-        // 10 {
-        // 11 1,2,.2,print
-        // 12 3,4.5,.3,print
-        // 13 2.5,5.5,.2,none
-        // 14 }
-        // 15 Required
-        // 16 {
-        // 17 1,2
-        // 18 }
-        //~
 
         spline.addControlPoint(new DControlPoint(new DVector(0, 0), new DDirection(3, 1), new DDirection(0, 0)));
         spline.addControlPoint(new DControlPoint(new DVector(6, 8), new DDirection(2, 5)));
@@ -143,8 +143,6 @@ public class PosBasicSplineFollower implements Follower {
         PosBasicSplineFollower posBasicSplineFollower = new PosBasicSplineFollower(spline, .1,
                 .01, .01, .02, w);
         Vector2D pos = new Vector2D(5, 0);
-//        posBasicSplineFollower.t = .99;
-//        System.out.println(posBasicSplineFollower.findTOnSpline(new Vector2D(1,1)));
         for (int j = 0; j < 1000; j++) {
             try {
                 pos.add(posBasicSplineFollower.get(pos));
@@ -155,12 +153,4 @@ public class PosBasicSplineFollower implements Follower {
 //
     }
 
-    public Waypoints getWaypoints() {
-        return waypoints;
-    }
-
-    @Override
-    public double getSpin(Vector2D pos) {
-        return 0;
-    }
 }

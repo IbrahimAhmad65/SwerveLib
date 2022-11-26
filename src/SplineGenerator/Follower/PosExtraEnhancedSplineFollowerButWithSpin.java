@@ -12,40 +12,49 @@ import SplineGenerator.Util.InterpolationInfo;
 import main.LinearlyInterpLUT;
 import main.Vector2D;
 
-
-public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFollower {
+// The most powerful Spline follower, adds angle control
+public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFollower implements Follower{
     private RequiredFollowerPoints requiredFollowerPoints;
     private BSplineH angleSpline;
     private LinearlyInterpLUT angleTLut;
     public PosExtraEnhancedSplineFollowerButWithSpin(Followable spline, double splineR, double splineRes,
                                           double maxToVel, double toVelSearchRadius, Waypoints waypoints, RequiredFollowerPoints r) {
         super(spline, splineR, splineRes, maxToVel, toVelSearchRadius, waypoints);
+        // Instantiating the follower points for this class
         this.requiredFollowerPoints = r;
-
+        // Adding the stopping waypoint
         waypoints.addWaypoint(new Waypoint(spline.getNumPieces() - .00001, () -> {
         }, 0));
-
+        // Doing the pre execution optimization to find the ratio between the towards the spline velocity
+        // (used for error correction when drifting off the spline)
+        // and the velocity given by the gradient (the one that makes the robot actually traverse the spline)
         double minOffSum = 99999;
         double tToVel = 0;
         super.forVel = .01;
+        // Running maxToVel / toVelSearchRadius paths
         for (double j = 0; j < maxToVel; j += toVelSearchRadius) {
             double offSum = 0;
             Vector2D pos = new Vector2D();
+            // Trying a new toVel, and resetting the class to run again
             super.toVel = j;
             boolean exit = false;
             t = 0;
+            // Running a path
             for (int k = 0; k < 1000 && !finished(); k++) {
                 pos.add(this.get(pos));
                 offSum += pos.clone().subtract(findPosOnSpline(pos)).getMagnitude();
-//                System.out.println(offSum);
             }
+            // Updating the local best ratio so far
             if (offSum < minOffSum) {
                 tToVel = super.toVel;
                 minOffSum = offSum;
             }
         }
+        // Updating the back to the spline velocity scaling to the ideal one found in the simulations
         super.toVel = tToVel;
         t = 0;
+
+        // Setting up the Angle Control
         SplinePoint[] splinePoints =new SplinePoint[requiredFollowerPoints.getRequiredFollowerPoints().length];
         double[] arr = requiredFollowerPoints.getAnglesOrdered();
         double[] arr2 = requiredFollowerPoints.getTOrdered();
@@ -57,42 +66,50 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         angleTLut = new LinearlyInterpLUT(arr2,indexArr);
         angleSpline = new BSplineH(.1,.1,splinePoints);
     }
-
+    /**
+     * A method that uses the standard following method as has been described in the documentation file, not to be called into
+     **/
     public Vector2D superget(Vector2D pos) {
         double newT = findTOnSpline(pos);
-//        System.out.println("Pos " + pos + " t: " + t);
-//        System.out.println(pos);
+        // Stop if we are about to overdrive the path, prevents code from crashing due to an array out of bounds exception
         if (newT >= super.spline.getNumPieces() - .01) {
             return new Vector2D(0, 0);
         }
-
+        // Stop if we are about to overdrive the path, prevents code from crashing due to an array out of bounds exception
         Vector2D baseVel = super.get(pos);
         return baseVel.setMagnitude(waypoints.getSpeed(newT));
     }
 
+    /**
+     * A method to show whether the auto has been completed yet or not
+     * **/
     public boolean finished() {
         return t >= spline.getNumPieces() - .01;
     }
 
+    /**
+     * A method that combines the standard following method as has been described in the documentation file,
+     * but also uses the required follower point algorithm if within a follower point's outer radius
+     **/
     public Vector2D get(Vector2D pos){
+        // Updates the t value
         double tempT = findTOnSpline(pos);
+        // Checks if we have just completed a required follower point
         if(requiredFollowerPoints.isInner(tempT)){
             return superget(pos);
         }
+        // Checks if we need to act according to a required follower point
         if(requiredFollowerPoints.isInOuter(t)){
             Vector2D v = spline.get(requiredFollowerPoints.findNearestT(tempT)).toVector2D();
             return v.subtract(pos).setMagnitude(waypoints.getSpeed(tempT));
         }
+        // If we are not in either radius of a required follower return the standard follower output
         return superget(pos);
     }
 
     public double getSpin(Vector2D pos){
         double tempT = findTOnSpline(pos);
-        if(Math.random() > .95){
-            System.out.println(tSpinMap(tempT));
-        }
         return angleSpline.evaluatePos(tSpinMap(tempT)).getY();
-//        return 0;
     }
 
     private double tSpinMap(double t){
@@ -100,29 +117,6 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
     }
 
     public static void main(String[] args) {
-
-        //  2 //positions cannot be negative numbers but thats okay :)
-        //  3 ControlPoints
-        //  4 {
-        //  5 0,0,3,1
-        //  6 6,8,2,5
-        //  7 2,.01,2,5
-        //  8 }
-        //  9 WayPoints
-        // 10 {
-        // 11 1,2,.2,print
-        // 12 3,4.5,.3,print
-        // 13 2.5,5.5,.2,none
-        // 14 }
-        // 15 Required
-        // 16 {
-        // 17 1,2
-        // 18 }
-
-        //0.37000000000000016
-        //0.5500000000000003
-        //0.6100000000000003
-
         Waypoints w = new Waypoints(new Waypoint(0, () -> {
         }, .4), new Waypoint(0.5500000000000003, () -> {
         }, .2), new Waypoint(7, () -> {
@@ -142,9 +136,6 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0,0}), new DDirection(new double[]{0, -1}), new DDirection(new double[]{0.0, 0.0})}));
         spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0, -1.2}), new DDirection(new double[]{-.1, -1})}));
         spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.54,-1.2}), new DDirection(new double[]{1, 0}), new DDirection(new double[]{0.0, 0.0})}));
-//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.117,.59}), new DDirection(new double[]{-1, 0})}));
-//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-3.275, 2.02})}));
-//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-3.275,2.3}), new DDirection(new double[]{0, .1})}));
 
 
         spline.closed = false;
@@ -178,7 +169,6 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         Vector2D pos = posBasicSplineFollower.spline.get(0).toVector2D();
         for (int j = 0; j < 1000 && !posBasicSplineFollower.finished(); j++) {
             try {
-//                System.out.println(j+ "," + posBasicSplineFollower.getSpin(pos));
                 System.out.println(pos);
                 pos.add(posBasicSplineFollower.get(pos).scale(.1));
             } catch (Exception e) {
@@ -191,7 +181,8 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         System.out.println(a.addTheta(Math.PI/2));
     }
 
-    public static double findTOnSplineCool(Vector2D pos, Spline spline, double splineRes) {
+    // Merely allows for findTOnSpline to be called from a static context
+    public static double findTOnSplineStatic(Vector2D pos, Spline spline, double splineRes) {
         Vector2D min = new Vector2D(99999.0, 99999.0);
         double newT = 0.0;
         new Vector2D();

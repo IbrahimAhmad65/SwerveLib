@@ -1,7 +1,7 @@
 package SplineGenerator.Follower;
 
 import java.util.HashMap;
-
+// Class for looking up autos
 public class AutoRegistry {
     HashMap<String,SingleAuto> autos;
     public AutoRegistry(){

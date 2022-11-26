@@ -4,22 +4,24 @@ import main.Vector2D;
 
 import java.util.Objects;
 
-public class Waypoint implements Comparable<Waypoint>{
+// Clas for storing waypoints
+public class Waypoint implements Comparable<Waypoint> {
     private double t;
     private Runnable action;
     private double speed;
     private boolean hasRun;
 
     private boolean requiredPos = false;
-    public Waypoint(double t, Runnable action, double speed){
+
+    public Waypoint(double t, Runnable action, double speed) {
         this.t = t;
         this.action = action;
         this.speed = speed;
         hasRun = false;
     }
 
-    public Waypoint(double t, Runnable action, double speed, boolean requiredPos){
-        this(t,action,speed);
+    public Waypoint(double t, Runnable action, double speed, boolean requiredPos) {
+        this(t, action, speed);
         this.requiredPos = requiredPos;
     }
 
@@ -35,25 +37,37 @@ public class Waypoint implements Comparable<Waypoint>{
         return t;
     }
 
-    public boolean isRequiredPos(){
+    public boolean isRequiredPos() {
         return requiredPos;
     }
 
-    public void run(double t){
-        if(this.t > t && !hasRun){
+    /**
+     * Executes the waypoint if the t value is correct
+     **/
+    public void run(double t) {
+        if (this.t > t && !hasRun) {
             action.run();
             hasRun = true;
         }
     }
 
+    /***
+     * Allows overriding of whether the waypoint has run or not
+     * */
     public void setHasRun(boolean hasRun) {
         this.hasRun = hasRun;
     }
 
+    /**
+     * Returns whether the waypoint has run
+     */
     public boolean hasRun() {
         return hasRun;
     }
 
+    /***
+     * Checks if two waypoints are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,8 +81,11 @@ public class Waypoint implements Comparable<Waypoint>{
         return Objects.hash(t, action, speed, hasRun, requiredPos);
     }
 
+    /**
+     * Compares two waypoints together
+     */
     @Override
     public int compareTo(Waypoint o) {
-        return (int)(t*1000 - 1000*((Waypoint)o).getT());
+        return (int) (t * 1000 - 1000 * ((Waypoint) o).getT());
     }
 }
