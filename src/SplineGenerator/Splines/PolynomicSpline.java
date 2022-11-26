@@ -126,7 +126,7 @@ public class PolynomicSpline extends Spline {
         int row = 0;
 
         row = matchPositions(row);
-
+        // Filling matrices with the equations to solve by gaussian elimination
         for (int i = 0; i < interpolationTypes.size(); i++) {
             switch (interpolationTypes.get(i).interpolationType) {
                 case Linked:
@@ -144,13 +144,12 @@ public class PolynomicSpline extends Spline {
                 row = setEndingEquations(row, interpolationTypes.get(i), i + 1);
             }
         }
-
-//        System.out.println(printMatrices());
-
+        //Solving By Gaussian Elimination
         for (int n = 0; n < matrices.length; n++) {
             matrices[n].solve();
         }
 
+        // Discretizes the spline
         setSpline();
         derivatives.add(spline);
     }
