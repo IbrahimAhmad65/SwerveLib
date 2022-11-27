@@ -77,7 +77,7 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         }
         // Stop if we are about to overdrive the path, prevents code from crashing due to an array out of bounds exception
         Vector2D baseVel = super.get(pos);
-        return baseVel.setMagnitude(waypoints.getSpeed(newT));
+        return baseVel.setMagnitude(.2);
     }
 
     /**
@@ -92,17 +92,18 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
      * but also uses the required follower point algorithm if within a follower point's outer radius
      **/
     public Vector2D get(Vector2D pos){
+        this.pos = pos;
         // Updates the t value
         double tempT = findTOnSpline(pos);
         // Checks if we have just completed a required follower point
-        if(requiredFollowerPoints.isInner(tempT)){
-            return superget(pos);
-        }
-        // Checks if we need to act according to a required follower point
-        if(requiredFollowerPoints.isInOuter(t)){
-            Vector2D v = spline.get(requiredFollowerPoints.findNearestT(tempT)).toVector2D();
-            return v.subtract(pos).setMagnitude(waypoints.getSpeed(tempT));
-        }
+//        if(requiredFollowerPoints.isInner(tempT)){
+//            return superget(pos);
+//        }
+//        // Checks if we need to act according to a required follower point
+//        if(requiredFollowerPoints.isInOuter(t)){
+//            Vector2D v = spline.get(requiredFollowerPoints.findNearestT(tempT)).toVector2D();
+//            return v.subtract(pos).setMagnitude(waypoints.getSpeed(tempT));
+//        }
         // If we are not in either radius of a required follower return the standard follower output
         return superget(pos);
     }

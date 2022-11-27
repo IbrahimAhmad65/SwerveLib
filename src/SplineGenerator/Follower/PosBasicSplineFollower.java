@@ -1,5 +1,7 @@
 package SplineGenerator.Follower;
 
+import SplineGenerator.GUI.DisplayGraphics;
+import SplineGenerator.GUI.Displayable;
 import SplineGenerator.Splines.PolynomicSpline;
 import SplineGenerator.Splines.Spline;
 import SplineGenerator.Util.DControlPoint;
@@ -10,7 +12,7 @@ import main.Function;
 import main.Vector2D;
 
 // Superclass Of Spline Follower Classes
-public class PosBasicSplineFollower implements Follower {
+public class PosBasicSplineFollower implements Follower, Displayable {
     protected Followable spline;
     protected double t;
     protected Vector2D oldPos;
@@ -21,6 +23,7 @@ public class PosBasicSplineFollower implements Follower {
     protected double forVel;
     protected double toVel;
 
+    protected Vector2D pos = new Vector2D();
     public PosBasicSplineFollower(Followable spline, double splineR, double splineRes, double forVel, double toVel, Waypoints waypoints, Runnable run) {
         run.run();
         this.spline = spline;
@@ -49,6 +52,7 @@ public class PosBasicSplineFollower implements Follower {
      * Gets the desired velocity of the follower given the current position
      * */
     public Vector2D get(Vector2D pos) {
+        this.pos = pos;
         Vector2D currentPos = findPosOnSpline(pos);
         Vector2D v = spline.evaluateDerivative(t, 1).toVector2D();
         return v.clone().scale(forVel).add(currentPos.clone().subtract(pos).scale(toVel)).setMagnitude(1);
@@ -153,4 +157,8 @@ public class PosBasicSplineFollower implements Follower {
 //
     }
 
+    @Override
+    public void display(DisplayGraphics graphics) {
+        graphics.paintPoint(pos.toDVector());
+    }
 }
