@@ -3,7 +3,7 @@ botright new
 let g:compP = ''
 let g:compF = ''
 set ignorecase
-set tabstop=4
+set tabstop=4 hfdshvbcb hjdv jhds
 set autoindent 
 syntax on
 set expandtab
