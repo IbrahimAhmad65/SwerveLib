@@ -8,6 +8,7 @@ import SplineGenerator.GUI.SplineDisplay;
 import SplineGenerator.Splines.PolynomicSpline;
 import SplineGenerator.Splines.Spline;
 import SplineGenerator.Util.DControlPoint;
+import SplineGenerator.Util.DDirection;
 import SplineGenerator.Util.DVector;
 import SplineGenerator.Util.InterpolationInfo;
 import main.LinearlyInterpLUT;
@@ -24,6 +25,7 @@ public class GoodestFollower implements Follower, Displayable {
     protected Waypoints waypoints;
     private BSplineH angleSpline;
     private LinearlyInterpLUT angleTLut;
+    private Vector2D followerVel = new Vector2D();
     public GoodestFollower(Followable followable, double splineR, double splineRes, Waypoints waypoints, RequiredFollowerPoints requiredFollowerPoints) {
         waypoints.addWaypoint(new Waypoint(followable.getNumPieces(), () -> {
         }, 0));
@@ -49,9 +51,10 @@ public class GoodestFollower implements Follower, Displayable {
     public Vector2D get(Vector2D pos) {
         this.pos = pos;
         Vector2D nearestPos = findPosOnSpline(pos);
-        Vector2D out = nearestPos.subtract(pos).scale(.2);
+        Vector2D out = nearestPos.subtract(pos).scale(30);
         out.add(followable.evaluateDerivative(t, 1).toVector2D());
         out.setMagnitude(waypoints.getSpeed(t));
+        this.followerVel = out.clone();
         return out;
     }
 
@@ -59,19 +62,19 @@ public class GoodestFollower implements Follower, Displayable {
      * Finds the nearest t on the spline given a position
      **/
     public double findTOnSpline(Vector2D pos) {
-        Vector2D min = new Vector2D(99999, 99999);
-        double newT = 0;
-        Vector2D check = new Vector2D();
-        for (double i = t - splineR; i < t + splineR; i += splineRes) {
-            double b = i > 0 ? i : .0001;
-            check = followable.get(b < followable.getNumPieces() ? b : followable.getNumPieces() - .0001).toVector2D().subtract(pos);
-            if (check.getMagnitude() < min.getMagnitude()) {
-                min = check.clone();
-                newT = b < followable.getNumPieces() ? b : followable.getNumPieces() - .0001;
+
+        double distMin = 9e307;
+        double tempT = 0;
+        for (double j = 0; j < followable.getNumPieces()-.00001; j += splineRes){
+            Vector2D temp = followable.get(j).toVector2D();
+
+            if(temp.getDistance(pos) < distMin){
+                distMin = temp.getDistance(pos);
+                tempT = j;
             }
         }
-        t = newT;
-        return newT;
+        this.t = tempT;
+        return this.t;
     }
 
     @Override
@@ -83,18 +86,20 @@ public class GoodestFollower implements Follower, Displayable {
      * Finds the nearest position on the spline given a position
      **/
     public Vector2D findPosOnSpline(Vector2D pos) {
-        Vector2D min = new Vector2D(99999, 99999);
-        Vector2D check = new Vector2D();
-        double newT = 0;
-        for (double i = t - splineR; i < t + splineR; i += splineRes) {
-            double b = i > 0 ? i : .0001;
-            check = followable.get(b < followable.getNumPieces() ? b : followable.getNumPieces() - .0001).toVector2D().subtract(pos);
-            if (check.getMagnitude() < min.getMagnitude()) {
-                min = check.clone();
-                newT = b < followable.getNumPieces() ? b : followable.getNumPieces() - .0001;
+        Vector2D min = new Vector2D(9e307,9e307);
+
+        double distMin = 9e307;
+        double tempT = 0;
+        for (double j = 0; j < followable.getNumPieces()-.00001; j += splineRes){
+            Vector2D temp = followable.get(j).toVector2D();
+
+            if(temp.getDistance(pos) < distMin){
+                distMin = temp.getDistance(pos);
+                min = temp.clone();
+                tempT = j;
             }
         }
-        t = newT;
+        this.t = tempT;
         return min;
     }
     private double tSpinMap(double t){
@@ -110,6 +115,9 @@ public class GoodestFollower implements Follower, Displayable {
     }
 
     public static void main(String[] args) {
+
+
+
         PolynomicSpline spline = new PolynomicSpline(2, 1);
         spline.addControlPoint(new DControlPoint(new DVector(0, 0)));
         spline.addControlPoint(new DControlPoint(new DVector(1, 1)));
@@ -120,12 +128,46 @@ public class GoodestFollower implements Follower, Displayable {
         spline.interpolationTypes.add(interpolationInfo);
         spline.generate();
         spline.takeNextDerivative();
+
+//        PolynomicSpline spline = new PolynomicSpline(2);
+//        spline.setPolynomicOrder(5);
+//        byte i = 1;
+//
+//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0,0}), new DDirection(new double[]{0, -1}), new DDirection(new double[]{0.0, 0.0})}));
+//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0, -1.2}), new DDirection(new double[]{-.1, -1})}));
+//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.54,-1.2}), new DDirection(new double[]{1, 0}), new DDirection(new double[]{0.0, 0.0})}));
+//
+//
+//        spline.closed = false;
+//        InterpolationInfo c1 = new InterpolationInfo();
+//        c1.interpolationType = Spline.InterpolationType.Linked;
+//        c1.endBehavior = Spline.EndBehavior.Hermite;
+//        spline.interpolationTypes.add(c1);
+//
+//        InterpolationInfo c2 = new InterpolationInfo();
+//        c2.interpolationType = Spline.InterpolationType.Linked;
+//        c2.endBehavior = Spline.EndBehavior.Hermite;
+//        spline.interpolationTypes.add(c2);
+//
+//        InterpolationInfo c3 = new InterpolationInfo();
+//        c3.interpolationType = Spline.InterpolationType.Linked;
+//        c3.endBehavior = Spline.EndBehavior.None;
+//        spline.interpolationTypes.add(c3);
+//
+//        InterpolationInfo c4 = new InterpolationInfo();
+//        c4.interpolationType = Spline.InterpolationType.Linked;
+//        c4.endBehavior = Spline.EndBehavior.None;
+//        spline.interpolationTypes.add(c4);
+//        spline.generate();
+//        spline.takeNextDerivative();
+
+
         Waypoints w = new Waypoints(new Waypoint(0, () -> {
         }, .4), new Waypoint(3, () -> {
         }, .2));
         RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(0,0),new RequiredFollowerPoint(8,Math.PI)};
         GoodestFollower goodestFollower = new GoodestFollower(spline,.1,.01,w,new RequiredFollowerPoints(.1,.0,r));
-        Vector2D pos = new Vector2D(0,0);
+        Vector2D pos = new Vector2D(-1,2);
         SplineDisplay splineDisplay = new SplineDisplay(spline,0,1,1300,700);
         splineDisplay.displayables.add(goodestFollower);
         splineDisplay.display();
@@ -140,5 +182,6 @@ public class GoodestFollower implements Follower, Displayable {
     @Override
     public void display(DisplayGraphics graphics) {
         graphics.paintPoint(pos.toDVector(),0,1,new Color(255,255,255));
+        graphics.paintVector(pos.toDVector(),followerVel.toDVector());
     }
 }

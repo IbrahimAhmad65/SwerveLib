@@ -145,8 +145,8 @@ public class PosBasicSplineFollower implements Follower, Displayable {
         spline.takeNextDerivative();
 
         PosBasicSplineFollower posBasicSplineFollower = new PosBasicSplineFollower(spline, .1,
-                .01, .01, .02, w);
-        Vector2D pos = new Vector2D(5, 0);
+                .01, .01, .02, w,()->{System.out.println("hola");});
+        Vector2D pos = new Vector2D(0, 0);
         for (int j = 0; j < 1000; j++) {
             try {
                 pos.add(posBasicSplineFollower.get(pos));
