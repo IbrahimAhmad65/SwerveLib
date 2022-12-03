@@ -26,6 +26,8 @@ public class GoodestFollower implements Follower, Displayable {
     private BSplineH angleSpline;
     private LinearlyInterpLUT angleTLut;
     private Vector2D followerVel = new Vector2D();
+
+    private Vector2D nearestPos = new Vector2D();
     public GoodestFollower(Followable followable, double splineR, double splineRes, Waypoints waypoints, RequiredFollowerPoints requiredFollowerPoints) {
         waypoints.addWaypoint(new Waypoint(followable.getNumPieces(), () -> {
         }, 0));
@@ -52,6 +54,7 @@ public class GoodestFollower implements Follower, Displayable {
         this.pos = pos;
         Vector2D nearestPos = findPosOnSpline(pos);
         Vector2D out = nearestPos.subtract(pos).scale(30);
+        this.nearestPos = out.clone().scale(1/30.0);
         out.add(followable.evaluateDerivative(t, 1).toVector2D());
         out.setMagnitude(waypoints.getSpeed(t));
         this.followerVel = out.clone();
@@ -118,48 +121,48 @@ public class GoodestFollower implements Follower, Displayable {
 
 
 
-        PolynomicSpline spline = new PolynomicSpline(2, 1);
-        spline.addControlPoint(new DControlPoint(new DVector(0, 0)));
-        spline.addControlPoint(new DControlPoint(new DVector(1, 1)));
-        spline.addControlPoint(new DControlPoint(new DVector(3, -1)));
-        InterpolationInfo interpolationInfo = new InterpolationInfo();
-        interpolationInfo.interpolationType = Spline.InterpolationType.None;
-        interpolationInfo.endBehavior = Spline.EndBehavior.None;
-        spline.interpolationTypes.add(interpolationInfo);
-        spline.generate();
-        spline.takeNextDerivative();
-
-//        PolynomicSpline spline = new PolynomicSpline(2);
-//        spline.setPolynomicOrder(5);
-//        byte i = 1;
-//
-//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0,0}), new DDirection(new double[]{0, -1}), new DDirection(new double[]{0.0, 0.0})}));
-//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0, -1.2}), new DDirection(new double[]{-.1, -1})}));
-//        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.54,-1.2}), new DDirection(new double[]{1, 0}), new DDirection(new double[]{0.0, 0.0})}));
-//
-//
-//        spline.closed = false;
-//        InterpolationInfo c1 = new InterpolationInfo();
-//        c1.interpolationType = Spline.InterpolationType.Linked;
-//        c1.endBehavior = Spline.EndBehavior.Hermite;
-//        spline.interpolationTypes.add(c1);
-//
-//        InterpolationInfo c2 = new InterpolationInfo();
-//        c2.interpolationType = Spline.InterpolationType.Linked;
-//        c2.endBehavior = Spline.EndBehavior.Hermite;
-//        spline.interpolationTypes.add(c2);
-//
-//        InterpolationInfo c3 = new InterpolationInfo();
-//        c3.interpolationType = Spline.InterpolationType.Linked;
-//        c3.endBehavior = Spline.EndBehavior.None;
-//        spline.interpolationTypes.add(c3);
-//
-//        InterpolationInfo c4 = new InterpolationInfo();
-//        c4.interpolationType = Spline.InterpolationType.Linked;
-//        c4.endBehavior = Spline.EndBehavior.None;
-//        spline.interpolationTypes.add(c4);
+//        PolynomicSpline spline = new PolynomicSpline(2, 1);
+//        spline.addControlPoint(new DControlPoint(new DVector(0, 0)));
+//        spline.addControlPoint(new DControlPoint(new DVector(1, 1)));
+//        spline.addControlPoint(new DControlPoint(new DVector(3, -1)));
+//        InterpolationInfo interpolationInfo = new InterpolationInfo();
+//        interpolationInfo.interpolationType = Spline.InterpolationType.None;
+//        interpolationInfo.endBehavior = Spline.EndBehavior.None;
+//        spline.interpolationTypes.add(interpolationInfo);
 //        spline.generate();
 //        spline.takeNextDerivative();
+
+        PolynomicSpline spline = new PolynomicSpline(2);
+        spline.setPolynomicOrder(5);
+        byte i = 1;
+
+        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0,0}), new DDirection(new double[]{0, -1}), new DDirection(new double[]{0.0, 0.0})}));
+        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{0, -1.2}), new DDirection(new double[]{-.1, -1})}));
+        spline.addControlPoint(new DControlPoint(new DVector[]{new DVector(new double[]{-2.54,-1.2}), new DDirection(new double[]{1, 0}), new DDirection(new double[]{0.0, 0.0})}));
+
+
+        spline.closed = false;
+        InterpolationInfo c1 = new InterpolationInfo();
+        c1.interpolationType = Spline.InterpolationType.Linked;
+        c1.endBehavior = Spline.EndBehavior.Hermite;
+        spline.interpolationTypes.add(c1);
+
+        InterpolationInfo c2 = new InterpolationInfo();
+        c2.interpolationType = Spline.InterpolationType.Linked;
+        c2.endBehavior = Spline.EndBehavior.Hermite;
+        spline.interpolationTypes.add(c2);
+
+        InterpolationInfo c3 = new InterpolationInfo();
+        c3.interpolationType = Spline.InterpolationType.Linked;
+        c3.endBehavior = Spline.EndBehavior.None;
+        spline.interpolationTypes.add(c3);
+
+        InterpolationInfo c4 = new InterpolationInfo();
+        c4.interpolationType = Spline.InterpolationType.Linked;
+        c4.endBehavior = Spline.EndBehavior.None;
+        spline.interpolationTypes.add(c4);
+        spline.generate();
+        spline.takeNextDerivative();
 
 
         Waypoints w = new Waypoints(new Waypoint(0, () -> {
@@ -183,5 +186,7 @@ public class GoodestFollower implements Follower, Displayable {
     public void display(DisplayGraphics graphics) {
         graphics.paintPoint(pos.toDVector(),0,1,new Color(255,255,255));
         graphics.paintVector(pos.toDVector(),followerVel.toDVector());
+        graphics.paintVector(pos.toDVector(),nearestPos.toDVector());
+
     }
 }
