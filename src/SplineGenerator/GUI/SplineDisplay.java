@@ -1,6 +1,7 @@
 package SplineGenerator.GUI;
 
 import SplineGenerator.Applied.LegacyVersions.FollowerGradient;
+import SplineGenerator.Follower.Followable;
 import SplineGenerator.Splines.Spline;
 import SplineGenerator.Util.*;
 
@@ -15,7 +16,7 @@ public class SplineDisplay extends Display {
     /**
      * The spline to be displayed
      */
-    private Spline spline;
+    private Followable spline;
 
     /**
      * The amount to step by when creating the spline out of tons of line segments
@@ -52,8 +53,8 @@ public class SplineDisplay extends Display {
      *
      * @param spline The spline to be displayed
      */
-    public SplineDisplay(Spline spline, int xDim, int yDim, int width, int height) {
-        super(spline.getDimensions(), null, xDim, yDim, width, height);
+    public SplineDisplay(Followable spline, int xDim, int yDim, int width, int height) {
+        super(2, null, xDim, yDim, width, height);
         this.spline = spline;
         onSplineDisplayables = new ArrayList<>();
         setTitle("Spline Display");
@@ -88,7 +89,7 @@ public class SplineDisplay extends Display {
         DPoint p1 = translate(spline.get(0)), p2 = spline.get(0);
         int tVal;
 
-        for (double t = pointOnSplineStep; t < spline.pieces; t += pointOnSplineStep) {
+        for (double t = pointOnSplineStep; t < spline.getNumPieces(); t += pointOnSplineStep) {
             tVal = (int) t % 3;
             if (tVal == 0) {
                 graphics.setColor(c1);
@@ -114,7 +115,7 @@ public class SplineDisplay extends Display {
      * A method for displaying the onSplineDisplayables
      */
     public void paintOnSpline() {
-        for (double t = onSplineStep / 2.0; t < spline.pieces; t += onSplineStep) {
+        for (double t = onSplineStep / 2.0; t < spline.getNumPieces(); t += onSplineStep) {
             for (int d = 0; d < onSplineDisplayables.size(); d++) {
                 onSplineDisplayables.get(d).get(t).display(graphics);
             }
@@ -148,10 +149,10 @@ public class SplineDisplay extends Display {
      * @return The BoundingBox object that the spline resides inside
      */
     public Extrema etBoundingBox() {
-        Extrema box = new Extrema(spline.getDimensions());
+        Extrema box = new Extrema(2);
         DPoint point;
 
-        for (double t = 0; t < spline.pieces; t += pointOnSplineStep) {
+        for (double t = 0; t < spline.getNumPieces(); t += pointOnSplineStep) {
             point = spline.get(t);
 
             if (point.get(xDim) < box.lesserPoint.get(xDim)) {

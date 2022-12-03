@@ -43,6 +43,10 @@ public class AutoScheduler {
         currentAuto = name;
     }
 
+    public String getCurrentAuto() {
+        return currentAuto;
+    }
+
     //Returns the autoRegistry
     public AutoRegistry getRegistry() {
         return registry;
