@@ -1,0 +1,151 @@
+{
+  "Name": "figure_eight.txt",
+  "ControlPoints": [
+    {
+      "X": -0.0,
+      "Y": -0.0,
+      "Vx": 0.0,
+      "Vy": 1.0,
+      "order" : 5
+
+    },
+    {
+      "X": 0.995,
+      "Y": 1.0,
+      "Vx": 1.0,
+      "Vy": 0.0,
+      "order" : 1
+
+    },
+    {
+      "X": 2.998,
+      "Y": -1.0,
+      "Vx": 1.0,
+      "Vy": 0.0,
+                           "order" : 1
+
+    },
+    {
+      "X": 3.991,
+      "Y": -0.0,
+      "Vx": 0.0,
+      "Vy": 1.0,
+                           "order" : 5
+
+    },
+    {
+      "X": 2.998,
+      "Y": 1.0,
+      "Vx": -5.0,
+      "Vy": 0.0,
+                           "order" : 5
+
+    },
+    {
+      "X": 1.303,
+      "Y": -1.0,
+      "Vx": -1.0,
+      "Vy": 0.0,
+                           "order" : 5
+
+    },
+    {
+      "X": 5,
+      "Y": 5,
+      "Vx": 5.0,
+      "Vy": 1.0,
+                           "order" : 5
+
+    }
+  ],
+  "RequiredPoints": [
+    {
+      "X": 0,
+      "Y": 0,
+      "args": {
+        "angle": 0
+      }
+    },
+    {
+          "X": 5,
+          "Y": 5,
+          "args": {
+            "angle": 0
+          }
+        }
+  ],
+  "WayPoints": [
+    {
+      "name": "8ae2",
+      "belongsTo": "self",
+      "X": 0.0,
+      "Y": 0.0,
+      "Speed": 2.0,
+      "Command": "autoShoot",
+      "args": {}
+    },
+    {
+      "name": "8ae2 [1]",
+      "belongsTo": "8ae2",
+      "X": 0.9950000000000001,
+      "Y": 1.0000000000000004,
+      "Speed": 2.0,
+      "Command": "lambdaLock",
+      "args": {
+        "vel/ang": 0,
+        "isVelocity": true,
+        "time": 0
+      }
+    },
+    {
+      "name": "8ae2 [2]",
+      "belongsTo": "8ae2",
+      "X": 1.095561707743058,
+      "Y": 0.9736469741586542,
+      "Speed": 2.0,
+      "Command": "unShoot",
+      "args": {}
+    },
+    {
+      "name": "b925",
+      "belongsTo": "self",
+      "X": 3.296,
+      "Y": 0.926,
+      "Speed": 3.0,
+      "Command": "pickLeft",
+      "args": {}
+    },
+    {
+      "name": "b925 [1]",
+      "belongsTo": "b925",
+      "X": 3.065872301145446,
+      "Y": 1.0706994140625152,
+      "Speed": 3.0,
+      "Command": "requiredPoint",
+      "args": {
+        "angle": 0
+      }
+    },
+    {
+      "name": "f0b5",
+      "belongsTo": "self",
+      "X": 1.411,
+      "Y": -1.322,
+      "Speed": 2.0,
+      "Command": "pickRight",
+      "args": {}
+    },
+    {
+      "name": "f0b5 [1]",
+      "belongsTo": "f0b5",
+      "X": 4.5,
+      "Y": 4.5,
+      "Speed": 6.0,
+      "Command": "requiredPoint",
+      "args": {
+        "angle": 0
+      }
+    },
+
+  ]
+}

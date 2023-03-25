@@ -1,0 +1,62 @@
+{
+  "Name": "basicNoChargingStation.json",
+  "Closed": "False",
+  "ControlPoints": [
+    {
+      "X": -6,
+      "Y": .37,
+      "Vx": -1.1330009229857414,
+      "Vy": 0,
+      "order": 1
+    },
+    {
+      "X": -5,
+      "Y": .37,
+      "Vx": 0,
+      "Vy": -5,
+      "order": 1
+    },
+  ],
+  "RequiredPoints": [
+    {
+      "X": -6,
+      "Y": .37,
+      "betweenWayPoints": "AUTO",
+      "args": {
+        "angle": 100,
+        "angle-GUI": 45.0
+      },
+      "isNeeded": false
+    },
+    {
+      "X": -4,
+            "Y": .37,
+      "betweenWayPoints": "AUTO",
+      "args": {
+        "angle": 0.0,
+        "angle-GUI": 45.0
+      },
+      "isNeeded": false
+    }
+  ],
+  "WayPoints": [
+    {
+     "X": -6,
+      "Y": .37,
+      "Speed": 2,
+      "Command": "None",
+      "betweenWayPoints": "AUTO",
+      "args": {},
+      "isNeeded": false
+    },
+    {
+          "X": -5.5,
+          "Y": .37,
+           "Speed": 1,
+                "Command": "none",
+                "betweenWayPoints": "AUTO",
+                "args": {},
+                "isNeeded": false
+        },
+  ]
+}
