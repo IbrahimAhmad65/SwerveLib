@@ -23,6 +23,10 @@ public class AutoScheduler {
         this.posSupplier = posSupplier;
     }
 
+    public Follower getFollower(){
+        return registry.get(currentAuto).getFollower();
+    }
+
     // Sets the position supplier
     public void setPosSupplier(Supplier<Vector2D> posSupplier) {
         this.posSupplier = posSupplier;
@@ -47,6 +51,14 @@ public class AutoScheduler {
         return currentAuto;
     }
 
+    public Supplier<Vector2D> getPosSupplier() {
+        return posSupplier;
+    }
+
+    public SingleAuto getSingleAuto(){
+        return registry.get(currentAuto);
+    }
+
     //Returns the autoRegistry
     public AutoRegistry getRegistry() {
         return registry;
@@ -62,12 +74,15 @@ public class AutoScheduler {
 
     // Executes the waypoints
     public void runWaypoints(){
-        Follower follower = registry.get(currentAuto).getFollower();
-        double t = follower.findTOnSpline(posSupplier.get());
-        Waypoint[] waypoints = new Waypoint[follower.getWaypoints().getWaypoints().size()];
-        follower.getWaypoints().getWaypoints().toArray(waypoints);
-        for (Waypoint i : waypoints) {
-            i.run(t);
+        double t = getRegistry().get(getCurrentAuto()).getFollower().getT();
+        for (Waypoint w:
+                getRegistry().get(getCurrentAuto()).getFollower().getWaypoints().getWaypoints()) {
+//            System.out.println(w.getT() + " has run: " + w.hasRun() + " t: " + t);
+            if(t > w.getT() && !w.hasRun()){
+//                System.out.println("running");
+                w.getAction().run();
+                w.setHasRun(true);
+            }
         }
     }
 
@@ -105,7 +120,7 @@ public class AutoScheduler {
         spline.generate();
         spline.takeNextDerivative();
 
-        Waypoints w = new Waypoints(new Waypoint(2, () -> {
+        Waypoints w = new Waypoints(spline,new Waypoint(2, () -> {
         }, .4), new Waypoint(0, () -> {
         }, .2), new Waypoint(4, () -> {
         }, .2,true), new Waypoint(6, () -> {

@@ -56,6 +56,14 @@ public class LinearlyInterpLUT {
         return Double.MIN_NORMAL;
     }
 
+    public double[] getData() {
+        return data;
+    }
+
+    public double[] getPairs() {
+        return pairs;
+    }
+
     public static void main(String[] args) {
         LinearlyInterpLUT bd = new LinearlyInterpLUT(new double[]{0,7,8}, new double[]{0,1,2});
         double b = bd.get(7.9);

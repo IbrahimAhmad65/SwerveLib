@@ -131,6 +131,7 @@ public abstract class Spline implements Followable {
      * @param controlPoint The ControlPoint object to be added
      */
     public void addControlPoint(DControlPoint controlPoint) {
+        System.out.println("Spline: " + controlPoint);
         controlPoint.t = controlPoints.size();
         controlPoints.add(controlPoint);
         numControlPoints++;

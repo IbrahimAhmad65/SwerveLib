@@ -130,7 +130,7 @@ public class AutoFileParser {
             rb[i] = new RequiredFollowerPoint(findTOnSpline(new Vector2D(Double.valueOf(inputRequired.get(i)[0]), Double.valueOf(inputRequired.get(i)[1])), spline, .01), Double.valueOf(inputRequired.get(i)[2]));
         }
         PosExtraEnhancedSplineFollowerButWithSpin follower = new PosExtraEnhancedSplineFollowerButWithSpin(spline,
-                .1, .01, .5, .01, new Waypoints(waypoints), new RequiredFollowerPoints(.1, .01, rb));
+                .1, .01, .5, .01, new Waypoints(spline,waypoints), new RequiredFollowerPoints(.1, .01, rb));
         return new SingleAuto(autoName, spline, follower);
 
     }

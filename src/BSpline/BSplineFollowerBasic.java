@@ -1,6 +1,5 @@
 package BSpline;
 
-import BSpline.Graphics.SplineGrapher;
 import main.Vector2D;
 
 import java.util.ArrayList;

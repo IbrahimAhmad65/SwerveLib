@@ -59,6 +59,12 @@ public class SplineDisplay extends Display {
         onSplineDisplayables = new ArrayList<>();
         setTitle("Spline Display");
     }
+    public SplineDisplay(Followable spline, int xDim, int yDim, int width, int height, String imageFile) {
+        super(2, null, xDim, yDim, width, height,imageFile);
+        this.spline = spline;
+        onSplineDisplayables = new ArrayList<>();
+        setTitle("Spline Display");
+    }
 
     /**
      * A method for painting the display
@@ -141,6 +147,10 @@ public class SplineDisplay extends Display {
         } else {
             super.setTranslationValues();
         }
+        xOffset = getWidth() / 2;
+        yOffset = getHeight() / 2;
+        System.out.println(scalar);
+        scalar = 100d;
     }
 
     /**
@@ -179,7 +189,7 @@ public class SplineDisplay extends Display {
      */
     public void paintDerivative(double t, int derivative) {
         DPoint startPoint = translate(spline.get(t));
-        graphics.paintVector(startPoint, spline.evaluateDerivative(t, derivative).toDirection(), xDim, yDim);
+        graphics.paintVector(startPoint, spline.evaluateDerivative(t, derivative).toDirection(), xDim, yDim,new Color(120, 8, 142));
         graphics.paintPoint(startPoint, xDim, yDim);
     }
 

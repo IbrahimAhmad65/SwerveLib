@@ -104,7 +104,10 @@ public class DisplayGraphics {
      * @param posVector The vector to be drawn
      */
     public void paintVector(DPosVector posVector) {
-        paintVector(posVector.getStartPoint(), posVector.toVector(), xDim, yDim);
+        paintVector(posVector.getStartPoint(), posVector.toVector(), xDim, yDim, vectorColor);
+    }
+    public void paintVector(DPosVector posVector, Color color) {
+        paintVector(posVector.getStartPoint(), posVector.toVector(), xDim, yDim, color);
     }
 
     /**
@@ -114,7 +117,10 @@ public class DisplayGraphics {
      * @param vector The vector to be painted
      */
     public void paintVector(DPoint point, DVector vector) {
-        paintVector(point, vector, xDim, yDim);
+        paintVector(point, vector, xDim, yDim,new Color(120, 8, 142));
+    }
+    public void paintVector(DPoint point, DVector vector, Color c) {
+        paintVector(point, vector, xDim, yDim,c);
     }
 
     /**
@@ -125,9 +131,9 @@ public class DisplayGraphics {
      * @param xDim   The value to use as the x-dimension
      * @param yDim   The value to use as the y-dimension
      */
-    public void paintVector(DPoint point, DVector vector, int xDim, int yDim) {
+    public void paintVector(DPoint point, DVector vector, int xDim, int yDim, Color color) {
         graphics.setStroke(new BasicStroke(lineWidth));
-        graphics.setColor(vectorColor);
+        graphics.setColor(color);
 
         point = translate.get(point);
         vector.multiply(yDim, -1);

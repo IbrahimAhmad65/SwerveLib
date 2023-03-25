@@ -82,6 +82,9 @@ public class GuiGeneration {
             try {
                 FileWriter myWriter = new FileWriter(args[1]);
                 for (double i = 0; i < input.size() - 1; i+= .05) {
+                    if((i - Math.floor(i)) <.04){
+                        myWriter.write("Control Point: " + Math.floor(i));
+                    }
                     myWriter.write(spline.get(i).get(0) + ","+ spline.get(i).get(1) +"\n");
                 }
                 myWriter.close();

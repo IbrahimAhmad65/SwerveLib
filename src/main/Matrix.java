@@ -101,19 +101,19 @@ public class Matrix {
         return this;
     }
 
-    public void setRow(int row, double[] rowData){
+    public void setRow(int row, double[] rowData) {
         data[row] = rowData;
     }
 
-    public Vector2D[] get2DVector(int start){
+    public Vector2D[] get2DVector(int start) {
         Vector2D[] v = new Vector2D[data.length];
         for (int i = 0; i < data.length; i++) {
-            v[i] = new Vector2D( data[i][start],data[i][start+1]);
+            v[i] = new Vector2D(data[i][start], data[i][start + 1]);
         }
         return v;
     }
 
-    public void setRow(int row, Double[] rowData){
+    public void setRow(int row, Double[] rowData) {
         for (int i = 0; i < rowData.length; i++) {
             data[row][i] = rowData[i];
         }
@@ -296,8 +296,8 @@ public class Matrix {
         int counter = 0;
         double[][] datas = reducedRowEchelon().getData();
         for (double[] d : datas) {
-            for(double j : d){
-                if(j != 0 ){
+            for (double j : d) {
+                if (j != 0) {
                     counter++;
                     break;
                 }
@@ -319,13 +319,13 @@ public class Matrix {
         return new Matrix(this.data);
     }
 
-    public static void main(String[] args) {
-        Matrix matrix = new Matrix(new double[][]{{1, 2, 1}, {-2, -3, 1}, {3, 5, 0}});
-        System.out.println(matrix.getRank());
-    }
-
-    public int getMaxRank(){
-        return Math.min(data.length,data[0].length);
+    //    public static void main(String[] args) {
+//        Matrix matrix = new Matrix(new double[][]{{1, 2, 1}, {-2, -3, 1}, {3, 5, 0}});
+//        System.out.println(matrix.getRank());
+//    }
+//
+    public int getMaxRank() {
+        return Math.min(data.length, data[0].length);
     }
 
     @Override
@@ -343,4 +343,30 @@ public class Matrix {
         }
         return str;
     }
+
+    public static void main(String[] args) {
+        Matrix m = new Matrix(16, 16);
+        double[][] data = {
+                {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1},
+                {1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1},
+                {0,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0},
+                {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0},
+                {0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0},
+                {0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0},
+                {0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1},
+                {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+                {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0}
+        };
+    m.setData(data);
+    double[] rightSide = {1,1,1,1,1,1,1,1,1,1,.1,.3,.1,.1,.1};
+        System.out.println(Arrays.toString(Matrix.solve(m, rightSide)));
+    }
+    //4 14 15 1 9 7 6 5 11 10 8 10 2 3, 13
 }

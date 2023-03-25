@@ -21,10 +21,12 @@ public class Waypoints {
 
     // LUT for all the t values of waypoints
     private LinearlyInterpLUT tLut;
+    private Followable spline;
 
 
-    public Waypoints(Waypoint... waypoints) {
+    public Waypoints(Followable spline,Waypoint... waypoints) {
         // Sorts the waypoints passed in
+        this.spline = spline;
         Arrays.sort(waypoints);
         // Converts waypoints to local array
         this.waypoints = new ArrayList<Waypoint>(List.of(waypoints));
@@ -86,7 +88,10 @@ public class Waypoints {
      * Returns the speed at a given t
      * */
     public double getSpeed(double t) {
-        return bSplineH.evaluatePos(tLut.get(t)).getY();
+        double b = bSplineH.evaluatePos(tLut.get(t)).getY();
+        if(b < .1 && t < spline.getNumPieces()-.5){
+        return bSplineH.evaluatePos(0).getY();}
+        return b;
     }
 
     /**

@@ -72,6 +72,10 @@ public class PolynomicSpline extends Spline {
         return point;
     }
 
+    public int getPolynomicOrder() {
+        return polynomicOrder;
+    }
+
     /**
      * A method for getting the value of the gradient at a specific t-value
      *
@@ -79,6 +83,8 @@ public class PolynomicSpline extends Spline {
      * @param derivative The derivative to evaluate
      * @return The DVector of the derivative at t
      */
+
+
     @Override
     public DVector evaluateDerivative(double t, int derivative) {
         if (t == getNumPieces()) {

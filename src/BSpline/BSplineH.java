@@ -24,9 +24,15 @@ public class BSplineH {
             equations[i] = CubicHermite.computeInterpParametric(x1, x2, y1, y2, tan1, tan2);
         }
         this.t = splineR;
+        System.out.println("t: " + t +  "Number Of Spline Points: " + splinePoints.length + "Number Of Equations: " + equationNumber + "");
+
     }
 
     public Vector2D evaluatePos(double t) {
+//        System.out.println("t: " + t + "");
+        if(t > equationNumber-.1){
+            return evaluatePos(equationNumber-.1);
+        }
         if (splinePoints[(int) t].getPos().getX() < splinePoints[(int) (t + .9999)].getPos().getX()) {
             return equations[(int) t].compute(t - (int) t).getPos();
         }
@@ -92,15 +98,12 @@ public class BSplineH {
         return equationNumber;
     }
 
+
     public static void main(String[] args) {
         //new SplinePoint(new Vector2D(.1,.1),new Vector2D(1,1)),
-        SplinePoint[] splinePoints1 = {new SplinePoint(new Vector2D(.5, 1), new Vector2D(1, 3)),
-                new SplinePoint(new Vector2D(.6, 1), new Vector2D(1, 3)),
-                new SplinePoint(new Vector2D(.1, .1), new Vector2D(1, 1))};
+
+        SplinePoint[] splinePoints1 = {new SplinePoint(new Vector2D(.5, 1), new Vector2D(1, 3)), new SplinePoint(new Vector2D(.6, 1), new Vector2D(1, 3)), new SplinePoint(new Vector2D(.1, .1), new Vector2D(1, 1))};
         BSplineH b = new BSplineH(.01, .1, splinePoints1);
-//        System.out.println(b.evaluatePos(0));
-//        System.out.println(b.findNearestPoint(new Vector2D(.5, 1)));
-//        System.out.println(b.evaluatePos(b.findNearestPoint(new Vector2D(.11, 1.1))));
         b.printSplinePos();
     }
 }

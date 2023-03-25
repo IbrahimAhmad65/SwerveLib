@@ -5,9 +5,11 @@ import SplineGenerator.Util.DVector;
 import SplineGenerator.Util.Extrema;
 import SplineGenerator.Util.Function;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Display extends JFrame {
@@ -124,7 +126,35 @@ public class Display extends JFrame {
         onGridBoundaries = new Extrema(dimensions);
         graphics.setTranslation(this::translate);
         setTitle("Display");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    }
+
+    public Display(int dimensions, Extrema bounds, int xDim, int yDim, int width, int height, String imageLocation) {
+        this.dimensions = dimensions;
+        this.boundingBox = bounds;
+        this.xDim = xDim;
+        this.yDim = yDim;
+        image = new BufferedImage(width, height, 1);
+
+        BufferedImage temp = new BufferedImage(width, height, 1);
+        try
+        {
+            File f = new File(imageLocation);
+            System.out.println(f.exists());
+            temp = ImageIO.read(new File(imageLocation));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        setBackgroundImage(temp, new DVector(8.22*2*2, 8.08*2), new DVector(0, 0));
+        graphics = new DisplayGraphics((Graphics2D) image.getGraphics(), this);
+        onGridDisplayables = new ArrayList<>();
+        displayables = new ArrayList<>();
+        onGridBoundaries = new Extrema(dimensions);
+        graphics.setTranslation(this::translate);
+        setTitle("Display");
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     public void setBackgroundImage(BufferedImage image, DVector imageSize) {
@@ -174,7 +204,8 @@ public class Display extends JFrame {
         JLabel jLabel = new JLabel();
         jLabel.setIcon(imageIcon);
         Graphics2D graphics = (Graphics2D) image.getGraphics();
-        graphics.drawImage(backgroundImage, windowWidthOffset, windowHeightOffset, this);
+//        graphics.drawImage(backgroundImage, windowWidthOffset, windowHeightOffset, this);
+        graphics.drawImage(backgroundImage, 1920/2-200, 1080/2-200 , this);
     }
 
     /**
@@ -242,6 +273,8 @@ public class Display extends JFrame {
             xOffset = (int) (scalar * backgroundImageOriginOffset.get(xDim));
             yOffset = (int) (scalar * backgroundImageOriginOffset.get(yDim));
         }
+        xOffset = 0;
+        yOffset = 0;
     }
 
     /**

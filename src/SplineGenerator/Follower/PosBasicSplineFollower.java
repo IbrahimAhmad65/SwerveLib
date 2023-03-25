@@ -109,9 +109,6 @@ public class PosBasicSplineFollower implements Follower, Displayable {
 
     // Tester code to check whether this class actually works
     public static void main(String[] args) {
-        Waypoints w = new Waypoints(new Waypoint(8, () -> {
-        }, 2), new Waypoint(0, () -> {
-        }, 2));
 
 
         PolynomicSpline spline = new PolynomicSpline(2);
@@ -144,6 +141,9 @@ public class PosBasicSplineFollower implements Follower, Displayable {
         spline.generate();
         spline.takeNextDerivative();
 
+        Waypoints w = new Waypoints(spline,new Waypoint(8, () -> {
+        }, 2), new Waypoint(0, () -> {
+        }, 2));
         PosBasicSplineFollower posBasicSplineFollower = new PosBasicSplineFollower(spline, .1,
                 .01, .01, .02, w,()->{System.out.println("hola");});
         Vector2D pos = new Vector2D(0, 0);

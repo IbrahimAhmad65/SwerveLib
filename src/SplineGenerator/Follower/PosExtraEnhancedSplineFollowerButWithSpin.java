@@ -118,17 +118,6 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
     }
 
     public static void main(String[] args) {
-        Waypoints w = new Waypoints(new Waypoint(0, () -> {
-        }, .4), new Waypoint(0.5500000000000003, () -> {
-        }, .2), new Waypoint(7, () -> {
-        }, .2,true));
-
-        Waypoints w2 = new Waypoints(new Waypoint(2, () -> {
-        }, .4), new Waypoint(0, () -> {
-        }, .2), new Waypoint(4, () -> {
-        }, .2), new Waypoint(6, () -> {
-        }, .2), new Waypoint(7, () -> {
-        }, .3));
 
         PolynomicSpline spline = new PolynomicSpline(2);
         spline.setPolynomicOrder(5);
@@ -161,6 +150,17 @@ public class PosExtraEnhancedSplineFollowerButWithSpin extends PosBasicSplineFol
         spline.interpolationTypes.add(c4);
         spline.generate();
         spline.takeNextDerivative();
+        Waypoints w = new Waypoints(spline,new Waypoint(0, () -> {
+        }, .4), new Waypoint(0.5500000000000003, () -> {
+        }, .2), new Waypoint(7, () -> {
+        }, .2,true));
+
+        Waypoints w2 = new Waypoints(spline,new Waypoint(2, () -> {
+        }, .4), new Waypoint(0, () -> {
+        }, .2), new Waypoint(4, () -> {
+        }, .2), new Waypoint(6, () -> {
+        }, .2), new Waypoint(7, () -> {
+        }, .3));
 
 
         RequiredFollowerPoint[] r = new RequiredFollowerPoint[]{new RequiredFollowerPoint(0,0),new RequiredFollowerPoint(8,Math.PI)};
