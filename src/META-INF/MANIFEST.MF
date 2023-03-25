@@ -1,3 +1,19 @@
 Manifest-Version: 1.0
-Main-Class: run.GuiGeneration
+Class-Path: grizzly-framework-2.3.3.jar grizzly-http-server-2.3.3-javado
+ c.jar grizzly-http-server-2.3.3.jar tyrus-core-1.2.1-javadoc.jar tyrus-
+ websocket-core-1.2.1-sources.jar jrosbridge-0.2.0-sources.jar tyrus-spi
+ -1.2.1.jar grizzly-http-server-2.3.3-sources.jar tyrus-client-1.2.1-jav
+ adoc.jar grizzly-rcm-2.3.3-javadoc.jar grizzly-rcm-2.3.3.jar javax.json
+ -1.0.4-sources.jar javax.json-1.0.4.jar jrosbridge-0.2.0-javadoc.jar gr
+ izzly-http-2.3.3-sources.jar tyrus-container-grizzly-1.2.1-sources.jar 
+ grizzly-http-2.3.3-javadoc.jar javax.websocket-api-1.0.jar tyrus-contai
+ ner-grizzly-1.2.1-javadoc.jar grizzly-http-2.3.3.jar grizzly-rcm-2.3.3-
+ sources.jar json.jar tyrus-spi-1.2.1-javadoc.jar tyrus-websocket-core-1
+ .2.1-javadoc.jar javax.json-1.0.4-javadoc.jar tyrus-core-1.2.1-sources.
+ jar tyrus-client-1.2.1.jar tyrus-websocket-core-1.2.1.jar tyrus-spi-1.2
+ .1-sources.jar javax.websocket-api-1.0-javadoc.jar grizzly-framework-2.
+ 3.3-sources.jar jrosbridge-0.2.0.jar javax.websocket-api-1.0-sources.ja
+ r tyrus-client-1.2.1-sources.jar tyrus-core-1.2.1.jar grizzly-framework
+ -2.3.3-javadoc.jar tyrus-container-grizzly-1.2.1.jar
+Main-Class: run.GuiGenerationType2
 

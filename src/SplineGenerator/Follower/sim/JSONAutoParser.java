@@ -271,27 +271,14 @@ public class JSONAutoParser {
 
     public static void main(String[] args) throws IOException {
         JSONAutoParser jsonAutoParser = new JSONAutoParser();
-        SingleAuto singleAuto = jsonAutoParser.generateAutoFromJSON("/home/ibrahim/robotics/TatorEyes2/AutoFollower/src/SplineGenerator/Follower/sim/figure_eight.txt", null);
-        GoodestFollower goodestFollower = (GoodestFollower) singleAuto.getFollower();
-        Vector2D pos = new Vector2D(0, 0);
+        SingleAuto singleAuto = jsonAutoParser.generateAutoFromJSON("/home/ibrahim/robotics/washatator/src/main/deploy/autoAroundStationConeCube2.txt", null);
+//        GoodestFollower goodestFollower = (GoodestFollower) singleAuto.getFollower();
+//        Vector2D pos = new Vector2D(0, 0);
 
-        if (false) {
-            SplineDisplay splineDisplay = new SplineDisplay(singleAuto.getSpline(), 0, 1, 1300, 700);
-            splineDisplay.displayables.add(goodestFollower);
-            splineDisplay.display();
-            while (true) {
-                if (!goodestFollower.finished()) {
-                    pos.add(goodestFollower.get(pos).scale(.01));
-//                    System.out.println(pos);
-                }
-                splineDisplay.repaint();
-            }
-        } else {
-            for (int i = 0; i < 1000 && !goodestFollower.finished(); i++) {
-                pos.add(goodestFollower.get(pos).scale(.01));
-                System.out.println(pos);
-            }
+        for (double i = 0; i < 100 * singleAuto.getSpline().getNumPieces(); i++) {
+            System.out.println(singleAuto.getSpline().get(i/100).toVector2D());
         }
+
     }
 
 
