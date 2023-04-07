@@ -32,6 +32,8 @@ public class AutoGen {
         posMap.put("gmp3", new Vector2D(-1.199, -1.909));
         posMap.put("gmp4", new Vector2D(-1.199, -3.101));
 
+        posMap.put("stationIn",new Vector2D( -5,-1.07));
+        posMap.put("stationOut",new Vector2D( -5,-1.07));
 
     }
 }
