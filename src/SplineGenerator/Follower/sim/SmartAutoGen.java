@@ -10,15 +10,18 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
-public class AutoGen {
+public class SmartAutoGen {
     private static HashMap<String, Vector2D> posMap;
     private static HashMap<String, AutoGenWaypoint[]> waypointMapAboutZero;
     private static HashMap<String, Double> angleMap;
     private static double transitSpeed = 3;
     private static String initActions = "PIH";
     private static String fallBackAction = "PH";
+    private static Polygon restrictedZones[];
 
 
     static {
@@ -63,39 +66,18 @@ public class AutoGen {
         angleMap.put("stationOut", 0.0);
 
 
-
         waypointMapAboutZero.put("PIH", new AutoGenWaypoint[]{new AutoGenWaypoint("placeConeHighInit", 0, transitSpeed * 1.5)});
         waypointMapAboutZero.put("cone", new AutoGenWaypoint[]{new AutoGenWaypoint("pickCone", -.8, transitSpeed), new AutoGenWaypoint("none", -.1, .25), new AutoGenWaypoint("none", .1, .25), new AutoGenWaypoint("unpick", .3, transitSpeed)});
         waypointMapAboutZero.put("cube", new AutoGenWaypoint[]{new AutoGenWaypoint("pickCubeA", -.7, transitSpeed), new AutoGenWaypoint("none", -.1, .9), new AutoGenWaypoint("none", .1, .9), new AutoGenWaypoint("unpick", .3, transitSpeed)});
-        waypointMapAboutZero.put("PH", new AutoGenWaypoint[]{new AutoGenWaypoint("PlaceHighCont", -.65, transitSpeed), new AutoGenWaypoint("none", -.3, transitSpeed / 3.0), new AutoGenWaypoint("dropWithWait",0, transitSpeed * .8 / 3.0)});
+        waypointMapAboutZero.put("PH", new AutoGenWaypoint[]{new AutoGenWaypoint("PlaceHighCont", -.65, transitSpeed), new AutoGenWaypoint("none", -.3, transitSpeed / 3.0), new AutoGenWaypoint("dropWithWait", 0, transitSpeed * .8 / 3.0)});
         waypointMapAboutZero.put("lock", new AutoGenWaypoint[]{new AutoGenWaypoint("lockSwerve", -.1, .6), new AutoGenWaypoint("none", -.5, .6)});
 
+        Polygon station = new Polygon(new Vector2D[]{posMap.get("s1Co"), posMap.get("s1Cu"), posMap.get("gmp1")});
+        restrictedZones = new Polygon[]{station};
 
     }
 
-
-
-
-
-
-    /**
-     * Auto Data takes the form of a string with the following format:
-     * The following is cone cube cone 2 auto from Charged up 2023 washatator
-     * NAME,s1Co_PH,gmp1_cube,s2Co_PH,gmp2_cone
-     */
-    public static SingleAuto createAuto(String autoData) {
-        return createAuto(autoData,null);
-    }
-
-    public static SingleAuto createAuto(String autoData, HashMap<String, Vector2D> posMap, HashMap<String, Double> angleMap, HashMap<String, AutoGenWaypoint[]> waypointMapAboutZero) {
-        AutoGen.posMap = posMap;
-        AutoGen.angleMap = angleMap;
-        AutoGen.waypointMapAboutZero = waypointMapAboutZero;
-        return createAuto(autoData);
-    }
-
-    public static SingleAuto createAuto(String autoData, HashMap<String, Runnable> cList){
-        PolynomicSpline out = new PolynomicSpline(2, 1);
+    public static void createAuto(String autoData) {
         String[] args = autoData.split(",");
         ArrayList<String> argsList = new ArrayList<>();
         for (String arg : args) {
@@ -113,7 +95,6 @@ public class AutoGen {
             String[] argSplit = arg.split("_");
             String pos = argSplit[0];
             String action = argSplit[1];
-            out.addControlPoint(new DControlPoint(posMap.get(pos).toDVector()));
             controlPoints.add(posMap.get(pos));
             angles.add(new AutoGenAngle(i, angleMap.get(pos)));
             if (firstItrOfString && action.equals(action)) {
@@ -121,12 +102,34 @@ public class AutoGen {
                 firstItrOfString = false;
             }
             for (AutoGenWaypoint waypoint : waypointMapAboutZero.get(action)) {
-                waypoint.setDeltaT(waypoint.getDeltaT()+i);
+                waypoint.setDeltaT(waypoint.getDeltaT() + i);
                 waypoints.add(waypoint);
             }
 
 
         }
+        SingleAuto auto = createAutoLocal(name, controlPoints, waypoints, angles);
+
+        boolean violation = false;
+        for (Polygon restrictedZone : restrictedZones) {
+            double tFailure = -1;
+            for (double i = 0; i < auto.getSpline().getNumPieces(); i += .01) {
+                if (restrictedZone.isWithin(auto.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))) {
+                    violation = true;
+                    tFailure = i;
+                    System.out.println("Violation at " + i);
+                    break;
+                }
+            }
+            if (violation) {
+                System.out.println("Violation at " + tFailure);
+                // insert transit code here
+            }
+        }
+    }
+
+    private static SingleAuto createAutoLocal(String name, ArrayList<Vector2D> controlPoints, ArrayList<AutoGenWaypoint> waypoints, ArrayList<AutoGenAngle> angles) {
+
 
         // FIXME Ordering can be fixed by swapping to a JSONArray, kinda big change so dont do it now
         JSONObject json = new JSONObject();
@@ -176,86 +179,60 @@ public class AutoGen {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try{
-            return JSONAutoParser.generateAutoFromJSON(json,cList);
+        try {
+            return JSONAutoParser.generateAutoFromJSON(json, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-
     public static void main(String[] args) {
-
-        AutoGen.createAuto("NAME,s1Co_PH,gmp1_cube,s2Co_PH,gmp2_cone");
+        SmartAutoGen.createAuto("NAME,s1Co_PH,gmp1_cube,s2Co_PH,gmp2_cone");
     }
 
 }
 
+class Polygon {
+    Vector2D[] points;
 
-
-
-class AutoGenWaypoint {
-    private double deltaT;
-    private String name;
-    private double speed;
-
-    AutoGenWaypoint(String name, double deltaT, double speed) {
-        this.name = name;
-        this.deltaT = deltaT;
-        this.speed = speed;
+    public Polygon(Vector2D[] points) {
+        this.points = points;
     }
 
-
-    public void setDeltaT(double deltaT) {
-        this.deltaT = deltaT;
+    public void setPoints(Vector2D[] points) {
+        this.points = points;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public boolean isWithin(Vector2D vector2D) {
+        int i, j;
+        boolean c = false;
+        for (i = 0, j = points.length - 1; i < points.length; j = i++) {
+            if (((points[i].getY() > vector2D.getY()) != (points[j].getY() > vector2D.getY())) &&
+                    (vector2D.getX() < (points[j].getX() - points[i].getX()) * (vector2D.getY() - points[i].getY()) / (points[j].getY() - points[i].getY()) + points[i].getX()))
+                c = !c;
+        }
+        return c;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Vector2D[] getPoints() {
+        return points;
     }
 
-    public double getDeltaT() {
-        return deltaT;
+    public Vector2D getCenter() {
+        double x = 0;
+        double y = 0;
+        for (Vector2D point : points) {
+            x += point.getX();
+            y += point.getY();
+        }
+        return new Vector2D(x / points.length, y / points.length);
     }
 
-    public double getSpeed() {
-        return speed;
-    }
-
-    public String getName() {
-        return name;
-    }
-}
-
-class AutoGenAngle {
-    private double deltaT;
-    private double angle;
-
-    AutoGenAngle(double deltaT, double angle) {
-
-        this.deltaT = deltaT;
-        this.angle = angle;
-    }
-
-
-    public void setDeltaT(double deltaT) {
-        this.deltaT = deltaT;
-    }
-
-    public void setSpeed(double speed) {
-        this.angle = speed;
-    }
-
-    public double getDeltaT() {
-        return deltaT;
-    }
-
-    public double getAngle() {
-        return angle;
+    @Override
+    public String toString() {
+        return "Polygon{" +
+                "points=" + Arrays.toString(points) +
+                '}';
     }
 }

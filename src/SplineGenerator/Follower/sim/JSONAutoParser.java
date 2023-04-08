@@ -27,6 +27,7 @@ public class JSONAutoParser {
     private static SplineOrder newJeferson = SplineOrder.FIRST;
 
     private static double theta = 0;
+    private static boolean sim = false;
 
 
     public JSONAutoParser() {
@@ -41,6 +42,9 @@ public class JSONAutoParser {
         DVector a, b;
 
         theta = Math.toRadians(json.getDouble("thetaOffset"));
+        if (sim) {
+            theta -= Math.PI / 2;
+        }
 
         ArrayList<PolynomicSpline> splines = new ArrayList<PolynomicSpline>();
         jeferson = SplineOrder.values()[aryControls.getJSONObject(0).getInt("order") == 1 ? 0 : 1];
@@ -148,17 +152,23 @@ public class JSONAutoParser {
         return fullSpline;
     }
 
-    public static Waypoints generateWaypointsFromJSON(JSONObject jsonObject, Followable fullSpline, HashMap<String,Runnable> cList) {
+    public static Waypoints generateWaypointsFromJSON(JSONObject jsonObject, Followable fullSpline, HashMap<String, Runnable> cList) {
         JSONObject json = jsonObject;
         JSONArray aryWaypoints = json.getJSONArray("WayPoints");
         JSONObject waypointJSON;
         Waypoint[] waypoints = new Waypoint[aryWaypoints.length()];
         for (int i = 0; i < waypoints.length; i++) {
 
-
+            double t;
             waypointJSON = aryWaypoints.getJSONObject(i);
-            double x = waypointJSON.getDouble("X");
-            double y = waypointJSON.getDouble("Y");
+
+            if (waypointJSON.has("t")) {
+                t = waypointJSON.getDouble("t");
+            } else {
+                double x = waypointJSON.getDouble("X");
+                double y = waypointJSON.getDouble("Y");
+                t = findTOnSpline(new Vector2D(x, y).addTheta(theta), fullSpline, .001);
+            }
             double speed = waypointJSON.getDouble("Speed");
             String command = waypointJSON.getString("Command");
             HashMap<String, Object> argsMap = new HashMap<String, Object>();
@@ -168,10 +178,10 @@ public class JSONAutoParser {
             }
 
             Runnable r = getRunnable(command, cList);
-            waypoints[i] = new Waypoint(findTOnSpline(new Vector2D(x, y).addTheta(theta), fullSpline, .001), r, speed);
+            waypoints[i] = new Waypoint(t, r, speed);
             System.out.println(speed);
         }
-        return new Waypoints(fullSpline,waypoints);
+        return new Waypoints(fullSpline, waypoints);
     }
 
     public static RequiredFollowerPoints generateRequiredFollowerPointsFromJSON(JSONObject jsonObject, Followable fullSpline) {
@@ -181,12 +191,24 @@ public class JSONAutoParser {
         RequiredFollowerPoint[] rb = new RequiredFollowerPoint[aryRequiredPoints.length()];
         for (int i = 0; i < rb.length; i++) {
             requiredJSON = aryRequiredPoints.getJSONObject(i);
-            double x = requiredJSON.getDouble("X");
-            double y = requiredJSON.getDouble("Y");
-            double angle = requiredJSON.getJSONObject("args").getDouble("angle");
+            double t;
+            if (requiredJSON.has("t")) {
+                t = requiredJSON.getDouble("t");
+            } else {
+                double x = requiredJSON.getDouble("X");
+                double y = requiredJSON.getDouble("Y");
+                t = findTOnSpline(new Vector2D(x, y).addTheta(theta), fullSpline, .001);
+            }
+            double angle;
+            System.out.println("Required Point: " + requiredJSON.toString());
+            if (requiredJSON.has("angle")) {
+                angle = requiredJSON.getDouble("angle");
+            } else {
+                angle = requiredJSON.getJSONObject("args").getDouble("angle");
+            }
 
 
-            rb[i] = new RequiredFollowerPoint(findTOnSpline(new Vector2D(x, y).addTheta(theta), fullSpline, .01), angle);
+            rb[i] = new RequiredFollowerPoint(t, angle);
             System.out.println("spline t: " + rb[i].getT() + " angle: " + rb[i].getAngle() + "");
         }
 
@@ -196,7 +218,18 @@ public class JSONAutoParser {
 
 
     public static SingleAuto generateAutoFromJSON(String fileName, HashMap<String, Runnable> cList) throws IOException {
+        sim = false;
         JSONObject json = new JSONObject(new String(Files.readAllBytes(Paths.get(fileName))));
+        return getSingleAutoFromJSONObject(json, cList);
+    }
+
+
+    public static SingleAuto generateAutoFromJSON(JSONObject json, HashMap<String, Runnable> cList) {
+        sim = false;
+        return getSingleAutoFromJSONObject(json, cList);
+    }
+
+    private static SingleAuto getSingleAutoFromJSONObject(JSONObject json, HashMap<String, Runnable> cList) {
         String autoName = json.getString("Name");
         Followable fullSpline = generateFollowableFromJSON(json);
         Waypoints waypoints = generateWaypointsFromJSON(json, fullSpline, cList);
@@ -205,9 +238,16 @@ public class JSONAutoParser {
         return new SingleAuto(autoName, fullSpline, follower);
     }
 
+    public static SingleAuto generateAutoFromJSON(String fileName, HashMap<String, Runnable> cList, boolean simIn) throws IOException {
+        sim = simIn;
+        JSONObject json = new JSONObject(new String(Files.readAllBytes(Paths.get(fileName))));
+        return getSingleAutoFromJSONObject(json, cList);
+    }
+
     public static Runnable getRunnable(String Command, HashMap<String, Runnable> cList) {
-        Runnable r = ()->{};
-        if(cList != null){
+        Runnable r = () -> {
+        };
+        if (cList != null) {
             r = cList.get(Command);
         }
         return r;
@@ -271,14 +311,27 @@ public class JSONAutoParser {
 
     public static void main(String[] args) throws IOException {
         JSONAutoParser jsonAutoParser = new JSONAutoParser();
-        SingleAuto singleAuto = jsonAutoParser.generateAutoFromJSON("/home/ibrahim/robotics/washatator/src/main/deploy/autoAroundStationConeCube2.txt", null);
-//        GoodestFollower goodestFollower = (GoodestFollower) singleAuto.getFollower();
-//        Vector2D pos = new Vector2D(0, 0);
+        SingleAuto singleAuto = jsonAutoParser.generateAutoFromJSON("/home/ibrahim/robotics/TatorEyes2/AutoFollower/src/SplineGenerator/Follower/sim/figure_eight.txt", null);
+        GoodestFollower goodestFollower = (GoodestFollower) singleAuto.getFollower();
+        Vector2D pos = new Vector2D(0, 0);
 
-        for (double i = 0; i < 100 * singleAuto.getSpline().getNumPieces(); i++) {
-            System.out.println(singleAuto.getSpline().get(i/100).toVector2D());
+        if (false) {
+            SplineDisplay splineDisplay = new SplineDisplay(singleAuto.getSpline(), 0, 1, 1300, 700);
+            splineDisplay.displayables.add(goodestFollower);
+            splineDisplay.display();
+            while (true) {
+                if (!goodestFollower.finished()) {
+                    pos.add(goodestFollower.get(pos).scale(.01));
+//                    System.out.println(pos);
+                }
+                splineDisplay.repaint();
+            }
+        } else {
+            for (int i = 0; i < 1000 && !goodestFollower.finished(); i++) {
+                pos.add(goodestFollower.get(pos).scale(.01));
+                System.out.println(pos);
+            }
         }
-
     }
 
 
