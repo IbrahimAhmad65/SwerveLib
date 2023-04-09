@@ -24,8 +24,6 @@ public class BSplineH {
             equations[i] = CubicHermite.computeInterpParametric(x1, x2, y1, y2, tan1, tan2);
         }
         this.t = splineR;
-        System.out.println("t: " + t +  "Number Of Spline Points: " + splinePoints.length + "Number Of Equations: " + equationNumber + "");
-
     }
 
     public Vector2D evaluatePos(double t) {
