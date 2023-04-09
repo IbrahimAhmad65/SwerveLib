@@ -107,8 +107,9 @@ public class  Vector2D implements Comparable{
     }
 
     // Scales X
-    public void scaleX(double scalar) {
+    public Vector2D scaleX(double scalar) {
         x *= scalar;
+        return this;
     }
 
     // Scales Y
