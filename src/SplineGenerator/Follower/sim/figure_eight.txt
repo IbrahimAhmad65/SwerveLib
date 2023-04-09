@@ -1,3 +1,44 @@
+//            boolean violation = false;
+//            for (Polygon restrictedZone : restrictedZones) {
+//                double tFailure = -1;
+//                for (double i = 0; i < auto.getSpline().getNumPieces(); i += .01) {
+//                    if (restrictedZone.isWithin(auto.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))) {
+//                        violation = true;
+//                        tFailure = i;
+//                        System.out.println("Violation at " + i);
+//                        break;
+//                    }
+//                }
+//            }
+//            if (violation) {
+//                int trueIndex = (int) Math.floor(tFailure);
+//                if (trueIndex < controlPoints.size() - 1) {
+//                    int transitFix = computeTransitFailureMode(auto.getSpline().get(tFailure).toVector2D());
+//                    boolean transitIn = controlPoints.get(trueIndex)[0].clone().subtract(controlPoints.get(trueIndex + 1)[0]).getX() < 0;
+//                    if (transitIn) {
+//                        controlPoints.add(trueIndex + 1, SmartAutoGen.transitIn.get(transitFix));
+//                        System.out.println("transit in: " + transitFix);
+//                    } else {
+//                        controlPoints.add(trueIndex + 1, SmartAutoGen.transitOut.get(transitFix));
+//                        System.out.println("transit out: " + transitFix);
+//                    }
+//                    for (AutoGenWaypoint waypoint : waypoints) {
+//                        if (waypoint.getDeltaT() >= transitFix + 1) {
+//                            waypoint.setDeltaT(waypoint.getDeltaT() + 1);
+//                        }
+//                    }
+//                    for (AutoGenAngle angle : angles) {
+//                        if (angle.getDeltaT() >= transitFix + 1) {
+//                            angle.setDeltaT(angle.getDeltaT() + 1);
+//                        }
+//                    }
+//                    auto = createAutoLocal(name, controlPoints, waypoints, angles);
+//                    break;
+//                }
+//            }
+
+
+
 {
   "Name": "figure_eight.txt",
   "ControlPoints": [

@@ -89,9 +89,8 @@ public class SmartAutoGen {
         transitIn.put(0, new Vector2D[]{topTransit, topVel});
         transitIn.put(1, new Vector2D[]{botTransit, botVel});
         transitOut = new HashMap<>();
-        transitOut.put(0, new Vector2D[]{topTransit, topVel.clone().scaleX(-1)});
-        transitOut.put(1, new Vector2D[]{botTransit, botVel.clone().scaleX(-1)});
-
+        transitOut.put(0, new Vector2D[]{topTransit.clone(), topVel.clone().scaleX(-1)});
+        transitOut.put(1, new Vector2D[]{botTransit.clone(), botVel.clone().scaleX(-1)});
     }
 
     public static void createAuto(String autoData) {
@@ -126,46 +125,46 @@ public class SmartAutoGen {
 
         }
         SingleAuto auto = createAutoLocal(name, controlPoints, waypoints, angles);
+        for (int i = 0; i < 4; i++) {
+            auto = doTransitFix(auto, controlPoints, waypoints, angles);
+        }
+//        for (int j = 0; j < 10; j++) {
+//            auto = doTransitFix(auto, controlPoints, waypoints, angles);
+//        }
+        for (double i = 0; i < auto.getSpline().getNumPieces(); i+=.01) {
+            System.out.println(auto.getSpline().get(i).toVector2D().addTheta(-Math.PI/2));
+        }
+    }
 
-        for (int j = 0; j < 10; j++) {
-            boolean violation = false;
-            for (Polygon restrictedZone : restrictedZones) {
-                double tFailure = -1;
-                for (double i = 0; i < auto.getSpline().getNumPieces(); i += .01) {
-                    if (restrictedZone.isWithin(auto.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))) {
-                        violation = true;
-                        tFailure = i;
-                        System.out.println("Violation at " + i);
-                        break;
+
+    private static SingleAuto doTransitFix(SingleAuto autIn, ArrayList<Vector2D[]> controlPoints, ArrayList<AutoGenWaypoint> waypoints, ArrayList<AutoGenAngle> angles){
+        boolean violation;
+        for (int j = 0; j < restrictedZones.length; j++) {
+            for (double i = 0; i < autIn.getSpline().getNumPieces()-.01; i+=.01) {
+                if(restrictedZones[j].isWithin(autIn.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))){
+                    violation = true;
+                    Vector2D failurePoint = autIn.getSpline().get(i).toVector2D();
+                    int failureMode = j;
+                    if(controlPoints.get((int)Math.floor(i))[0].clone().getX() < controlPoints.get((int)Math.floor(i+1))[0].clone().getX()){
+                        controlPoints.add((int)Math.floor(i) + 1, transitIn.get(failureMode));
+                    } else {
+                        controlPoints.add((int)Math.floor(i)+1, transitOut.get(failureMode));
                     }
-                }
-                if (violation) {
-                    int trueIndex = (int) Math.floor(tFailure);
-                    if (trueIndex < controlPoints.size() - 1) {
-                        int transitFix = computeTransitFailureMode(controlPoints.get(trueIndex)[0]);
-                        boolean transitIn = controlPoints.get(trueIndex)[0].clone().subtract(controlPoints.get(trueIndex+1)[0]).getX() < 0;
-                        if(transitIn){
-                            controlPoints.add(trueIndex+1,SmartAutoGen.transitIn.get(transitFix));
-                        } else {
-                            controlPoints.add(trueIndex+1,SmartAutoGen.transitOut.get(transitFix));
+                    for (int k = 0; k < waypoints.size(); k++) {
+                        if(waypoints.get(k).getDeltaT() > i){
+                            waypoints.get(k).setDeltaT(waypoints.get(k).getDeltaT() + 1);
                         }
-                        for (AutoGenWaypoint waypoint : waypoints) {
-                            if(waypoint.getDeltaT() >= transitFix+1){
-                                waypoint.setDeltaT(waypoint.getDeltaT()+1);
-                            }
-                        }
-                        for (AutoGenAngle angle : angles) {
-                            if(angle.getDeltaT() >= transitFix+1){
-                                angle.setDeltaT(angle.getDeltaT()+1);
-                            }
-                        }
-                        auto = createAutoLocal(name, controlPoints, waypoints, angles);
-                        break;
                     }
+                    for (int k = 0; k < angles.size(); k++) {
+                        if(angles.get(k).getDeltaT() > i){
+                            angles.get(k).setDeltaT(angles.get(k).getDeltaT() + 1);
+                        }
+                    }
+                    break;
                 }
             }
         }
-
+        return createAutoLocal(autIn.getAutoName(), controlPoints, waypoints, angles);
     }
 
 
@@ -190,6 +189,7 @@ public class SmartAutoGen {
         JSONArray controlPointMap = new JSONArray();
         for (Vector2D[] controlPoint : controlPoints) {
             JSONObject controlPointData = new JSONObject();
+//            System.out.println(controlPoint);
             controlPointData.put("X", controlPoint[0].getX());
             controlPointData.put("Y", controlPoint[0].getY());
             controlPointData.put("Vx", controlPoint[1].getY());

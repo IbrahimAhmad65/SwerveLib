@@ -48,11 +48,9 @@ public class JSONAutoParser {
 
         ArrayList<PolynomicSpline> splines = new ArrayList<PolynomicSpline>();
         jeferson = SplineOrder.values()[aryControls.getJSONObject(0).getInt("order") == 1 ? 0 : 1];
-        System.out.println("jeferson: " + jeferson);
         PolynomicSpline spline = new PolynomicSpline(2, aryControls.getJSONObject(0).getInt("order"));
         int fiveOrderCounter = 0;
         boolean dontEnd = false;
-        System.out.println("aryControls.length(): " + aryControls.length());
         for (int i = 0; i < aryControls.length(); i++) {
 
             double x;
@@ -179,7 +177,6 @@ public class JSONAutoParser {
 
             Runnable r = getRunnable(command, cList);
             waypoints[i] = new Waypoint(t, r, speed);
-            System.out.println(speed);
         }
         return new Waypoints(fullSpline, waypoints);
     }
@@ -200,7 +197,6 @@ public class JSONAutoParser {
                 t = findTOnSpline(new Vector2D(x, y).addTheta(theta), fullSpline, .001);
             }
             double angle;
-            System.out.println("Required Point: " + requiredJSON.toString());
             if (requiredJSON.has("angle")) {
                 angle = requiredJSON.getDouble("angle");
             } else {
@@ -209,7 +205,6 @@ public class JSONAutoParser {
 
 
             rb[i] = new RequiredFollowerPoint(t, angle);
-            System.out.println("spline t: " + rb[i].getT() + " angle: " + rb[i].getAngle() + "");
         }
 
 
