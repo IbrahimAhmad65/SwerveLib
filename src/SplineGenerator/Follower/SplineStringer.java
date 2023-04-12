@@ -192,12 +192,7 @@ public class SplineStringer implements Followable {
         for (int i = 1; i < cascL.length; i++) {
             cascL[i] = cascH[i-1];
         }
-        for (int n: cascL) {
-            System.out.println(n);
-        }
-        for (int n: cascH) {
-            System.out.println(n);
-        }
+
     }
 
     @Override

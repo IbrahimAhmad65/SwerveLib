@@ -65,8 +65,8 @@ public class SmartAutoGen {
         listOfAngles.put("gmp4", 1.0);
 
 
-        listOfPositions.put("stationIn", new Vector2D[]{new Vector2D(-5, -1.07), new Vector2D(1, 0)});
-        listOfPositions.put("stationOut", new Vector2D[]{new Vector2D(-4, -1.07), new Vector2D(-1, 0)});
+        listOfPositions.put("stationIn", new Vector2D[]{new Vector2D(-5, -1.07), new Vector2D(4, 0)});
+        listOfPositions.put("stationOut", new Vector2D[]{new Vector2D(-4, -1.07), new Vector2D(-4, 0)});
         listOfAngles.put("stationIn", 0.0);
         listOfAngles.put("stationOut", 0.0);
 
@@ -84,10 +84,10 @@ public class SmartAutoGen {
 
 
         Vector2D topOfStationRecoveryPosition = new Vector2D(-4.31, .444);
-        Vector2D topOfStationVel = new Vector2D(-3, 0);
+        Vector2D topOfStationVel = new Vector2D(3, 0);
 
         Vector2D bottomOfStationRecoveryPosition = new Vector2D(-4.31, -3.2);
-        Vector2D bottomOfStationRecoveryVelocity = new Vector2D(-3, 0);
+        Vector2D bottomOfStationRecoveryVelocity = new Vector2D(3, 0);
         restrictedZonesRecoveryIn.put(0, new Vector2D[]{topOfStationRecoveryPosition, topOfStationVel});
         restrictedZonesRecoveryIn.put(1, new Vector2D[]{bottomOfStationRecoveryPosition, bottomOfStationRecoveryVelocity});
         restrictedZonesRecoveryOut.put(0, new Vector2D[]{topOfStationRecoveryPosition.clone(), topOfStationVel.clone().scaleX(-1)});
@@ -95,20 +95,20 @@ public class SmartAutoGen {
     }
 
     public static void createAuto(String autoData) {
-        String[] args = autoData.split(",");
-        ArrayList<String> argsList = new ArrayList<>();
-        for (String arg : args) {
-            argsList.add(arg);
+        String[] segments = autoData.split(",");
+        ArrayList<String> segmentList = new ArrayList<>();
+        for (String segment : segments) {
+            segmentList.add(segment);
         }
-        String name = argsList.remove(0);
-        int numControlPoints = argsList.size();
+        String name = segmentList.remove(0);
+        int numControlPoints = segmentList.size();
         ArrayList<Vector2D[]> controlPoints = new ArrayList<>();
         ArrayList<AutoGenWaypoint> waypoints = new ArrayList<>();
         ArrayList<AutoGenAngle> angles = new ArrayList<>();
 
         boolean hasInitializeStringBeenAdded = false;
         for (int i = 0; i < numControlPoints; i++) {
-            String currentPoint = argsList.remove(0);
+            String currentPoint = segmentList.remove(0);
             String[] currentPointSplit = currentPoint.split("_");
             String position = currentPointSplit[0];
             String action = currentPointSplit[1];
@@ -133,45 +133,6 @@ public class SmartAutoGen {
     }
 
 
-    private static SingleAuto applyRestrictedZoneRecovery(SingleAuto basePath, ArrayList<Vector2D[]> controlPoints, ArrayList<AutoGenWaypoint> waypoints, ArrayList<AutoGenAngle> angles){
-        for (int j = 0; j < restrictedZones.length; j++) {
-            for (double i = 0; i < basePath.getSpline().getNumPieces()-.01; i+=.01) {
-                if(restrictedZones[j].isWithin(basePath.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))){
-                    int restrictedZoneViolated = j;
-                    boolean pathMovingTowardsIn = controlPoints.get((int)Math.floor(i))[0].clone().getX() < controlPoints.get((int)Math.floor(i+1))[0].clone().getX();
-                    if(pathMovingTowardsIn){
-                        controlPoints.add((int)Math.floor(i) + 1, restrictedZonesRecoveryIn.get(restrictedZoneViolated));
-                    } else {
-                        controlPoints.add((int)Math.floor(i)+1, restrictedZonesRecoveryOut.get(restrictedZoneViolated));
-                    }
-                    for (int k = 0; k < waypoints.size(); k++) {
-                        if(waypoints.get(k).getDeltaT() > i){
-                            waypoints.get(k).setDeltaT(waypoints.get(k).getDeltaT() + 1);
-                        }
-                    }
-                    for (int k = 0; k < angles.size(); k++) {
-                        if(angles.get(k).getDeltaT() > i){
-                            angles.get(k).setDeltaT(angles.get(k).getDeltaT() + 1);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        return createAutoBase(basePath.getAutoName(), controlPoints, waypoints, angles);
-    }
-
-    private static boolean hasRestrictedZoneFailure(SingleAuto autIn){
-        for (int j = 0; j < restrictedZones.length; j++) {
-            for (double i = 0; i < autIn.getSpline().getNumPieces()-.01; i+=.01) {
-                if(restrictedZones[j].isWithin(autIn.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private static SingleAuto createAutoBase(String name, ArrayList<Vector2D[]> controlPoints, ArrayList<AutoGenWaypoint> waypoints, ArrayList<AutoGenAngle> angles) {
         // FIXME Ordering can be fixed by swapping to a JSONArray, kinda big change so dont do it now
         JSONObject mainJSONContainer = new JSONObject();
@@ -186,9 +147,18 @@ public class SmartAutoGen {
 //            System.out.println(controlPoint);
             controlPointSingleIndex.put("X", controlPoint[0].getX());
             controlPointSingleIndex.put("Y", controlPoint[0].getY());
-            controlPointSingleIndex.put("Vx", controlPoint[1].getY());
+            controlPointSingleIndex.put("Vx", controlPoint[1].getX());
             controlPointSingleIndex.put("Vy", controlPoint[1].getY());
-            controlPointSingleIndex.put("order", restrictedZonesRecoveryIn.containsValue(controlPoint[0]) || restrictedZonesRecoveryOut.containsValue(controlPoint[0]) ? 5 : 1);
+
+            for (int i = 0; i < restrictedZonesRecoveryIn.size(); i++) {
+                if(restrictedZonesRecoveryIn.get(i)[0].equals(controlPoint[0])){
+                    controlPointSingleIndex.put("order", 5);
+                    break;
+                }
+            }
+            if(!controlPointSingleIndex.has("order")){
+                controlPointSingleIndex.put("order", 1);
+            }
             controlPointsForContainer.put(controlPointSingleIndex);
         }
 
@@ -228,8 +198,47 @@ public class SmartAutoGen {
         return null;
     }
 
+    private static boolean hasRestrictedZoneFailure(SingleAuto autIn){
+        for (int j = 0; j < restrictedZones.length; j++) {
+            for (double i = 0; i < autIn.getSpline().getNumPieces()-.01; i+=.01) {
+                if(restrictedZones[j].isWithin(autIn.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static SingleAuto applyRestrictedZoneRecovery(SingleAuto basePath, ArrayList<Vector2D[]> controlPoints, ArrayList<AutoGenWaypoint> waypoints, ArrayList<AutoGenAngle> angles){
+        for (int j = 0; j < restrictedZones.length; j++) {
+            for (double i = 0; i < basePath.getSpline().getNumPieces()-.01; i+=.01) {
+                if(restrictedZones[j].isWithin(basePath.getSpline().get(i).toVector2D().addTheta(-Math.PI / 2))){
+                    int restrictedZoneViolated = j;
+                    boolean pathMovingTowardsIn = controlPoints.get((int)Math.floor(i))[0].clone().getX() < controlPoints.get((int)Math.floor(i+1))[0].clone().getX();
+                    if(pathMovingTowardsIn){
+                        controlPoints.add((int)Math.floor(i) + 1, restrictedZonesRecoveryIn.get(restrictedZoneViolated));
+                    } else {
+                        controlPoints.add((int)Math.floor(i)+1, restrictedZonesRecoveryOut.get(restrictedZoneViolated));
+                    }
+                    for (int k = 0; k < waypoints.size(); k++) {
+                        if(waypoints.get(k).getDeltaT() > i){
+                            waypoints.get(k).setDeltaT(waypoints.get(k).getDeltaT() + 1);
+                        }
+                    }
+                    for (int k = 0; k < angles.size(); k++) {
+                        if(angles.get(k).getDeltaT() > i){
+                            angles.get(k).setDeltaT(angles.get(k).getDeltaT() + 1);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return createAutoBase(basePath.getAutoName(), controlPoints, waypoints, angles);
+    }
+
     public static void main(String[] args) {
-        SmartAutoGen.createAuto("NAME,s1Co_PH,gmp1_cube,s1Cu_PH,gmp2_cone");
+        SmartAutoGen.createAuto("NAME,s1Co_PH,gmp1_cube,s1Cu_PH,gmp2_cone,s2Co_PH");
     }
 
 }
