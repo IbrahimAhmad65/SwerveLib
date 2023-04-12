@@ -64,7 +64,7 @@ public class FullJSONSimulator {
 
 
         autoScheduler.setCurrentAuto(autoName);
-        splineDisplay = new SplineDisplay(autoScheduler.getRegistry().get(autoName).getSpline(), 0, 1, 1920, 1080,"/home/ibrahim/robotics/TatorEyes2/AutoFollower/src/SplineGenerator/Follower/sim/field.png");
+        splineDisplay = new SplineDisplay(autoScheduler.getRegistry().get(autoName).getSpline(), 0, 1, 1920, 1080*2,"/home/ibrahim/robotics/TatorEyes2/AutoFollower/src/SplineGenerator/Follower/sim/field.png");
 //        splineDisplay.displayables.add(new FieldDisplay());
         splineDisplay.displayables.add((GoodestFollower) autoScheduler.getRegistry().get(autoName).getFollower());
         autoScheduler.setPosSupplier(pos::clone);
@@ -143,12 +143,12 @@ public class FullJSONSimulator {
 
     public static void main(String[] args) throws Exception {
         FullJSONSimulator fullJSONSimulator = new FullJSONSimulator(
-//                 "/home/ibrahim/robotics/washatator/src/main/deploy/autoReal2.txt"
+                 "/home/ibrahim/robotics/SwerveLib/src/SplineGenerator/Follower/sim/autogen.json"
 
 
 
 //                "C:\\Users\\senti\\code\\washatator\\src\\main\\deploy\\autoReal2.txt"
-                "C:\\Users\\senti\\code\\washatator\\src\\main\\deploy\\autoAroundStationConeCone.txt"
+//                "C:\\Users\\senti\\code\\washatator\\src\\main\\deploy\\autoAroundStationConeCone.txt"
         );
         fullJSONSimulator.simAll(.01, 10);
 

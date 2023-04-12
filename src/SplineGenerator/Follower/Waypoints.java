@@ -39,6 +39,26 @@ public class Waypoints {
      * */
     public void contruct() {
         // Making an array of spline points for use in bSplineH
+
+
+
+        for (int i = 0; i < waypoints.size()-1; i++) {
+            for (int j = i+1; j < waypoints.size(); j++) {
+                if(waypoints.get(i).getT() == waypoints.get(j).getT()) {
+                    int finalJ = j;
+                    int finalI = i;
+                    waypoints.get(i).setAction(() -> {
+                        waypoints.get(finalI).getAction().run();
+                        waypoints.get(finalJ).getAction().run();
+                    });
+                    waypoints.remove(j);
+                    i--;
+                    j--;
+                }
+            }
+        }
+
+
         SplinePoint[] splinePoints = new SplinePoint[waypoints.size()];
         // Creating the T values for the bSplineH
         tValues = new double[waypoints.size()];

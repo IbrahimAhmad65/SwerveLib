@@ -35,7 +35,6 @@ public class CubicHermite {
             tan1S = 1.0/tan1;
             tan2S = 1.0/tan2;
             if(tan1S == Double.POSITIVE_INFINITY ||tan1S == Double.NEGATIVE_INFINITY || tan2S == Double.POSITIVE_INFINITY || tan2S == Double.NEGATIVE_INFINITY){
-                System.out.println("tan1 " + tan1 + " tan2 " +tan2);
                 throw new IllegalArgumentException("your numbers are bad lol");
             }
             flip = true;
@@ -72,7 +71,6 @@ public class CubicHermite {
             tan1S = 1.0/tan1;
             tan2S = 1.0/tan2;
             if(tan1S == Double.POSITIVE_INFINITY ||tan1S == Double.NEGATIVE_INFINITY || tan2S == Double.POSITIVE_INFINITY ||tan2S == Double.NEGATIVE_INFINITY){
-                System.out.println("tan1 " + tan1 + " tan2 " +tan2);
                 throw new IllegalArgumentException("your numbers are bad lol");
             }
             flip = true;
@@ -140,7 +138,6 @@ public class CubicHermite {
             tan1S = 1.0/tan1;
             tan2S = 1.0/tan2;
             if(tan1S == Double.POSITIVE_INFINITY ||tan1S == Double.NEGATIVE_INFINITY || tan2S == Double.POSITIVE_INFINITY ||tan2S == Double.NEGATIVE_INFINITY){
-                System.out.println("tan1 " + tan1 + " tan2 " +tan2);
                 throw new IllegalArgumentException("your numbers are bad lol");
             }
             flip = true;
@@ -162,7 +159,6 @@ public class CubicHermite {
 
     public static void main(String[] args) {
         String a = CubicHermite.getDesmosEquations(1, 5, 1, 8, 1, 1, "t");
-        System.out.println(a);
         System.out.println(CubicHermite.computeInterp(1, 5, 1, 8, 1, 1).compute(1.5));
 
     }

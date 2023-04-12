@@ -33,6 +33,10 @@ public class Waypoint implements Comparable<Waypoint> {
         return action;
     }
 
+    public void setAction(Runnable action) {
+        this.action = action;
+    }
+
     public double getT() {
         return t;
     }
