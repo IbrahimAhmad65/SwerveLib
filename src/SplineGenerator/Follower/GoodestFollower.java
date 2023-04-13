@@ -120,7 +120,7 @@ public class GoodestFollower implements Follower, Displayable {
         out.add(followable.evaluateDerivative(t, 1).toVector2D());
         out.setMagnitude(waypoints.getSpeed(t));
         this.followerVel = out.clone();
-        if(oldFollowervel.clone().getTheta() - followerVel.clone().getTheta() > Math.PI/2){
+        if(Math.abs(oldFollowervel.clone().getTheta() - followerVel.clone().getTheta() )> Math.PI/2){
             this.t+=.2;
             updateT(pos);
             nearestPos = findPosOnSpline(pos);

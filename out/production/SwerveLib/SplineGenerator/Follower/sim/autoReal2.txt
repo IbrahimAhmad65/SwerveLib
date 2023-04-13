@@ -1,0 +1,83 @@
+{
+  "Name": "around_charging_station.json",
+  "Closed": "False",
+  "ControlPoints": [
+    {
+      "X": -5.62,
+      "Y": -.25,
+      "Vx": -1.1330009229857414,
+      "Vy": 0,
+      "order": 1
+    },
+    {
+      "X": -6.75,
+      "Y": -.25,
+      "Vx": 1,
+      "Vy": 1,
+      "order": 5
+    },
+    {
+      "X": -4.79,
+      "Y": .48,
+      "Vx": 1.0,
+     "Vy": 1,
+      "order": 5
+    },
+    {
+      "X": -1.16,
+      "Y": .5,
+      "Vx": 1.0,
+      "Vy": 0,
+      "order": 1
+    },
+    {
+      "X": -6.66,
+      "Y": .37,
+      "Vx": 8.659560562354934e-17,
+      "Vy": -1.4142135623730951,
+      "order": 5
+    },
+  ],
+  "RequiredPoints": [
+    {
+      "X": -5.62,
+      "Y": -.25,
+      "betweenWayPoints": "AUTO",
+      "args": {
+        "angle": 0.7853981633974483,
+        "angle-GUI": 45.0
+      },
+      "isNeeded": false
+    },
+    {
+      "X": -6.66,
+            "Y": .37,
+      "betweenWayPoints": "AUTO",
+      "args": {
+        "angle": 0.0,
+        "angle-GUI": 45.0
+      },
+      "isNeeded": false
+    }
+  ],
+  "WayPoints": [
+    {
+      "X": -5.62,
+            "Y": -.25,
+      "Speed": 1.0,
+      "Command": "None",
+      "betweenWayPoints": "AUTO",
+      "args": {},
+      "isNeeded": false
+    },
+    {
+     "X": -6.65,
+          "Y": .37,
+      "Speed": 1.0,
+      "Command": "None",
+      "betweenWayPoints": "AUTO",
+      "args": {},
+      "isNeeded": false
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="AutoFollower">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/AutoFollower_jar/AutoFollower.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

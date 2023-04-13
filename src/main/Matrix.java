@@ -61,8 +61,8 @@ public class Matrix {
         int row2 = in.data.length;
         int col1 = data[0].length;
         int col2 = in.data[0].length;
-        if (data.length != in.data[0].length) {
-            throw new IllegalArgumentException("invalid dimensions");
+        if (data[0].length != in.data.length) {
+            throw new IllegalArgumentException("invalid dimensions: data: " + data.length + " data in[0]: " + in.data[0].length );
         }
         double out[][] = new double[row1][col2];
         for (i = 0; i < row1; i++) {

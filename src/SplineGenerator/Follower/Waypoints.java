@@ -57,7 +57,12 @@ public class Waypoints {
                 }
             }
         }
-
+        for (int i = 0; i < waypoints.size(); i++) {
+            if(waypoints.get(i).getSpeed() < 0) {
+                waypoints.remove(i);
+                i--;
+            }
+        }
 
         SplinePoint[] splinePoints = new SplinePoint[waypoints.size()];
         // Creating the T values for the bSplineH
