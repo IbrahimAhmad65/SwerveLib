@@ -83,12 +83,13 @@ public class Matrix {
         return this;
     }
 
-    public void subtract(Matrix in) {
+    public Matrix subtract(Matrix in) {
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[0].length; j++) {
                 data[i][j] += in.data[i][j];
             }
         }
+        return this;
     }
 
 
